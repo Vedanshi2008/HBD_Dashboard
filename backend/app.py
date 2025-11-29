@@ -499,6 +499,10 @@ def upload_google_data():
             connection.commit()
     except Error as e:
         print(f"Error uploading data inside the google_map table: {e}")
+        return jsonify({
+            "status": "error",
+            "message": "Invalid CSV format"
+        }), 400
     finally:
         if connection and connection.is_connected():
             connection.close()
@@ -506,65 +510,6 @@ def upload_google_data():
     "status": "success"
 })
 
-
-@app.route('/upload_amazon_data', methods=["POST"])
-def upload_amazon_data():
-
-    connection = None
-    inserted = 0
-    try:
-        print("Connecting with:", os.getenv('DB_HOST'), os.getenv('DB_USER'), os.getenv('DB_NAME'))
-        connection = mysql.connector.connect(
-           host=os.getenv('DB_HOST'),
-           user=os.getenv('DB_USER'),
-           password=os.getenv('DB_PASSWORD'),
-           database=os.getenv('DB_NAME')
-        )
-        cursor = connection.cursor()
-        if request.files:
-            files = request.files.getlist("file")
-            total_row_data = []
-            for file in files:
-                if file.filename == "": # handling empty files
-                    continue   
-                currFile = pd.read_csv(file)
-                for row in currFile.itertuples(index=False):
-                    # print(row)
-                    row_tuple = (
-                    safe_get(row, 'product_name'),
-                    safe_get(row, 'address'),
-                    safe_get(row, 'website'),
-                    safe_get(row, 'phone_number'),
-                    safe_get(row, 'reviews_count'),
-                    safe_get(row, 'reviews_average'),
-                    safe_get(row, 'category'),
-                    safe_get(row, 'subcategory'),
-                    safe_get(row, 'city'),
-                    safe_get(row, 'state'),
-                    safe_get(row, 'area')
-                    )
-                    total_row_data.append(row_tuple)
-                    inserted+=1  # keeping track of total rows being added
-
-                    # storing the valus in the database
-            # print(total_row_data)
-            upload_google_map_data_query = '''
-                INSERT INTO google_map (
-                    name, address, website, phone_number, reviews_count, reviews_average, category, subcategory, city, state, area
-                ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-            '''
-            cursor.executemany(upload_google_map_data_query,
-                total_row_data
-            )
-            connection.commit()
-    except Error as e:
-        print(f"Error uploading data inside the google_map table: {e}")
-    finally:
-        if connection and connection.is_connected():
-            connection.close()
-    return jsonify({
-    "status": "success"
-})
             
 # amazone scrapper 
 # MySQL connection config (use environment variables or hardcode for local)
@@ -885,6 +830,72 @@ def scrape_and_insert():
     thread = threading.Thread(target=scrape_amazon_search, args=(search_term, pages))
     thread.start()
     return jsonify({"status": "started"}), 202
+
+
+# uploader for amazon_products bulk data
+@app.route('/upload_amazon_products_data', methods=["POST"])
+def upload_amazon_products_data():
+
+    connection = None
+    inserted = 0
+    try:
+        connection = mysql.connector.connect(**DB_CONFIG_AMAZON)
+        cursor = connection.cursor()
+        if request.files:
+            files = request.files.getlist("file")
+            total_row_data = []
+            for file in files:
+                if file.filename == "": # handling empty files
+                    continue   
+                currFile = pd.read_csv(file)
+                for row in currFile.itertuples(index=False):
+                    row_tuple = (
+                    safe_get(row, 'ASIN'),                             
+                    safe_get(row, 'Product_name'),
+                    safe_get(row, 'price'),
+                    safe_get(row, 'rating'),
+                    safe_get(row, 'Number_of_ratings'),
+                    safe_get(row, 'Brand'),
+                    safe_get(row, 'Seller'),
+                    safe_get(row, 'category'),
+                    safe_get(row, 'subcategory'),
+                    safe_get(row, 'sub_sub_category'),
+                    safe_get(row, 'category_sub_sub_sub'),
+                    safe_get(row, 'colour'),
+                    safe_get(row, 'size_options'),
+                    safe_get(row, 'description'),
+                    safe_get(row, 'link'),
+                    safe_get(row, 'Image_URLs'),
+                    safe_get(row, 'About_the_items_bullet'),
+                    safe_get(row, 'Product_details'),
+                    safe_get(row, 'Additional_Details'),
+                    safe_get(row, 'Manufacturer_Name'),
+                    )
+                    total_row_data.append(row_tuple)
+                    inserted+=1  # keeping track of total rows being added
+
+            # storing the valus in the database
+            upload_amazon_products_data_query = '''
+                INSERT INTO amazon_products (
+                    ASIN, Product_name, price, rating, Number_of_ratings, Brand, Seller, category, subcategory, sub_sub_category, category_sub_sub_sub,colour,size_options,description,link,Image_URLs,About_the_items_bullet,Product_details,Additional_Details,Manufacturer_Name
+                ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            '''
+            cursor.executemany(upload_amazon_products_data_query,
+                total_row_data
+            )
+            connection.commit()
+    except Error as e:
+        print(f"Error uploading data inside the amazon_products table: {e}")
+        return jsonify({
+            "status": "error",
+            "message": "Invalid CSV format"
+        }), 400
+    finally:
+        if connection and connection.is_connected():
+            connection.close()
+    return jsonify({
+    "status": "success"
+})
 
 
 # ROOT
