@@ -448,6 +448,143 @@ def safe_get(row,column):
         value = getattr(row, column, None)
         return None if pd.isna(value) else value
 
+@app.route('/upload_schoolgis_data', methods=["POST"])
+def upload_schoolgis_data():
+
+    connection = None
+    inserted = 0
+    try:
+        connection = mysql.connector.connect(
+            host=os.getenv('DB_HOST'),
+            user=os.getenv('DB_USER'),
+            password=os.getenv('DB_PASSWORD'),
+            database=os.getenv('DB_NAME'),
+            port=os.getenv('DB_PORT')
+        )
+        cursor = connection.cursor()
+
+        if request.files:
+            files = request.files.getlist("file")
+            rows_to_insert = []
+
+            for file in files:
+                if file.filename == "":
+                    continue
+                
+                df = pd.read_csv(file)
+
+                # iterate rows
+                for row in df.itertuples(index=False):
+                    row_tuple = (
+                        safe_get(row, 'name'),
+                        safe_get(row, 'pincode'),
+                        safe_get(row, 'latitude'),
+                        safe_get(row, 'longitude'),
+                        safe_get(row, 'subcategory'),
+                        safe_get(row, 'city'),
+                        safe_get(row, 'state'),
+                        safe_get(row, 'country'),
+                        safe_get(row, 'category')
+                    )
+                    rows_to_insert.append(row_tuple)
+                    inserted += 1
+
+            # execute batch insert
+            insert_query = '''
+                INSERT INTO schoolgis (
+                    name, pincode, latitude, longitude, subcategory,
+                    city, state, country, category
+                ) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)
+            '''
+            cursor.executemany(insert_query, rows_to_insert)
+            connection.commit()
+
+    except Error as e:
+        print("Error inserting data:", e)
+        return jsonify({
+            "status": "error",
+            "message": "Invalid CSV format"
+        }), 400
+
+    finally:
+        if connection and connection.is_connected():
+            connection.close()
+
+    return jsonify({
+        "status": "success",
+        "inserted_rows": inserted
+    })
+
+@app.route('/upload_yellow_pages_data', methods=["POST"])
+def upload_yellow_pages_data():
+
+    connection = None
+    inserted = 0
+
+    try:
+        # database connection
+        connection = mysql.connector.connect(
+            host=os.getenv('DB_HOST'),
+            user=os.getenv('DB_USER'),
+            password=os.getenv('DB_PASSWORD'),
+            database=os.getenv('DB_NAME'),
+            port=os.getenv('DB_PORT')
+        )
+        cursor = connection.cursor()
+
+        if request.files:
+            files = request.files.getlist("file")
+            rows_to_insert = []
+
+            for file in files:
+                if file.filename == "":
+                    continue
+
+                df = pd.read_csv(file)
+
+                for row in df.itertuples(index=False):
+                    row_tuple = (
+                        safe_get(row, 'name'),
+                        safe_get(row, 'address'),
+                        safe_get(row, 'area'),
+                        safe_get(row, 'number'),
+                        safe_get(row, 'mail'),
+                        safe_get(row, 'category'),
+                        safe_get(row, 'pincode'),
+                        safe_get(row, 'city'),
+                        safe_get(row, 'state'),
+                        safe_get(row, 'country')
+                    )
+
+                    rows_to_insert.append(row_tuple)
+                    inserted += 1
+
+            insert_query = """
+                INSERT INTO yellow (
+                    name, address, area, number, mail, category,
+                    pincode, city, state, country
+                )
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            """
+
+            cursor.executemany(insert_query, rows_to_insert)
+            connection.commit()
+
+    except Error as e:
+        print("Error:", e)
+        return jsonify({
+            "status": "error",
+            "message": "Database insert failed or CSV format invalid"
+        }), 400
+
+    finally:
+        if connection and connection.is_connected():
+            connection.close()
+
+    return jsonify({
+        "status": "success",
+        "rows_inserted": inserted
+    }), 200
 
 @app.route('/upload_google_data', methods=["POST"])
 def upload_google_data():
