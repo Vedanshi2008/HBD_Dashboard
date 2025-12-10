@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Card, CardBody, CardHeader, Typography } from '@material-tailwind/react';
-import { productData } from '@/data/productJSON'; 
-import api from '@/utils/Api';
-const ProductComplete = () => {
+import { listingData } from '@/data/listingJSON';
+const GoogleMapData = () => {
   const [loading, setLoading] = useState(false);
-  const [fullData,setFullData] = useState(productData);  
+  const [fullData] = useState(listingData);  
   const [data, setData] = useState([]);    
   const [currentPage, setCurrentPage] = useState(1); 
   const limit = 10;
@@ -13,10 +12,10 @@ const ProductComplete = () => {
 
   // const fetchData = () => {
   //   const start = (currentPage - 1) * limit;
-  //   const currData = fullData.slice(start, start + limit);      ---> Mock Data Code
+  //   const currData = fullData.slice(start, start + limit);      --->Mock Data Code
   //   setData(currData);
   // };
-  
+
   const fetchData = async () => {
     const res = await api.get("/api/results");
     setFullData(res.data);  
@@ -30,7 +29,7 @@ const ProductComplete = () => {
     const start = (currentPage - 1) * limit;  
     const currData = fullData.slice(start, start + limit);
     setData(currData);
-  }, [currentPage,fullData])
+  }, [currentPage, fullData])
   
   return (
     <div className="mt-12 mb-8 flex flex-col gap-12 px-4">
@@ -40,7 +39,7 @@ const ProductComplete = () => {
           color="gray"
           className="mb-8 p-4 flex items-center justify-between"
         >
-          <Typography variant="h6" color="white">Country Data</Typography>
+          <Typography variant="h6" color="white">Google Map Data</Typography>
 
           <div className="flex items-center gap-4">
             <Button
@@ -62,8 +61,8 @@ const ProductComplete = () => {
           <table className="w-full min-w-[640px] table-auto">
             <thead>
               <tr>
-                {["ASIN","Product Name","Price","Rating","Rating Count","Brand","Seller",
-                "Category","Sub-Category","Sub-Sub Category","Sub-Sub-Sub Category","Colour","Size(s)","Description","Link","Image URls","About Items","Product Details","Additional Details","Manufacturer Name"].map((head) => (
+                {["Name","Mobile Number	","Review Count	","Rating	","Catagory	","Address	",
+                "Website","Email Id	","PlusCode	","Closing Hours	","latitude	","longitude	","Instagram ","Profile	","Facebook ","Profile	","Linkedin Profile	","Twitter Profile	","Images Folder"].map((head) => (
                   <th key={head} className="border-b border-blue-gray-50 py-3 px-5 text-left">
                     <Typography
                       variant="small"
@@ -78,28 +77,26 @@ const ProductComplete = () => {
 
             <tbody>
               {data.map((item, idx) => (
-
-                <tr key={item.name} className="border-b border-blue-gray-50 py-3 px-5 text-left">
-                  <td className="py-3 px-5">{item.ASIN || "-"}</td>
-                  <td className="py-3 px-5"><div className="max-h-[80px] min-w-[220px] max-w-[260px] overflow-y-hidden overflow-x-hidden whitespace-normal break-words">{item.Product_name || "-"}</div></td>
-                  <td className="py-3 px-5">{item.price || "-"}</td>
-                  <td className="py-3 px-5">{item.rating || "-"}</td>
-                  <td className="py-3 px-5">{item.Number_of_ratings || "-"}</td>
-                  <td className="py-3 px-5">{item.Brand || "-"}</td>
-                  <td className="py-3 px-5">{item.Seller || "-"}</td>
-                  <td className="py-3 px-5">{item.category || "-"}</td>
-                  <td className="py-3 px-5">{item.subcategory || "-"}</td>
-                  <td className="py-3 px-5">{item.sub_sub_category || "-"}</td>
-                  <td className="py-3 px-5">{item.category_sub_sub_sub || "-"}</td>
-                  <td className="py-3 px-5">{item.colour || "-"}</td>
-                  <td className="py-3 px-5">{item.size_options || "-"}</td>
-                  <td className="py-3 px-5">{item.description || "-"}</td>
-                  <td className="py-3 px-5 text-blue-500"><a href={`${item.link}`}>{item.link.length > 30 ? item.link.substring(0, 30) + "..." : item.link}</a></td>
-                  <td className="py-3 px-5">{item.Image_URLs || "-"}</td>
-                  <td className="py-3 px-5">{item.About_the_items_bullet || "-"}</td>
-                  {/* <td className="py-3 px-5">{item.Product_details || "-"}</td> */}
-                  {/* <td className="py-3 px-5">{item.Additional_Details || "-"}</td> */}
-                  <td className="py-3 px-5">{item.Manufacturer_Name || "-"}</td>
+                <tr key={idx}>
+                  <td className="py-3 px-5">{item.Name	 || "-"}</td>
+                  <td className="py-3 px-5">{item.MobileNumber		 || "-"}</td>
+                  <td className="py-3 px-5">{item.ReviewCount		 || "-"}</td>
+                  <td className="py-3 px-5">{item.Rating		 || "-"}</td>
+                  <td className="py-3 px-5">{item.Catagory		 || "-"}</td>
+                  <td className="py-3 px-5">{item.Address		 || "-"}</td>
+                  <td className="py-3 px-5">{item.Website		 || "-"}</td>
+                  <td className="py-3 px-5">{item.EmailId		 || "-"}</td>
+                  <td className="py-3 px-5">{item.PlusCode		 || "-"}</td>
+                  <td className="py-3 px-5">{item.ClosingHours		 || "-"}</td>
+                  <td className="py-3 px-5">{item.latitude		 || "-"}</td>
+                  <td className="py-3 px-5">{item.longitude		 || "-"}</td>
+                  <td className="py-3 px-5">{item.Instagram 	 || "-"}</td>
+                  <td className="py-3 px-5">{item.Profile		 || "-"}</td>
+                  <td className="py-3 px-5">{item.Facebook 	 || "-"}</td>
+                  <td className="py-3 px-5">{item.Profile		 || "-"}</td>
+                  <td className="py-3 px-5">{item.LinkedinProfile		 || "-"}</td>
+                  <td className="py-3 px-5">{item.TwitterProfile		 || "-"}</td>
+                  <td className="py-3 px-5">{item.ImagesFolder	 || "-"}</td>
                 </tr>
               ))}
             </tbody>
@@ -116,14 +113,15 @@ const ProductComplete = () => {
           Previous
         </button>
 
-        <button
+        
+          <button
             className="px-3 py-1 rounded border 
                 bg-white text-blue-500
             "
           >
             {currentPage}
           </button>
-
+        
         <button
           className="px-3 py-1 rounded bg-blue-500 text-white disabled:bg-gray-300"
           disabled={currentPage === totalPages}
@@ -136,4 +134,4 @@ const ProductComplete = () => {
   );
 };
 
-export default ProductComplete;
+export default GoogleMapData;
