@@ -200,10 +200,10 @@ const ListingIncomplate = () => {
                       }`;
 
                       return (
-                        <tr key={item.id}>
+                        <tr key={item.id} className="border-b border-blue-gray-50 py-3 px-5 text-left">
                           <td className={className}>{item.id}</td>
                           <td className={className}>{item.name}</td>
-                          <td className={className}>{item.address}</td>
+                          <td className={className}><div className="max-h-[80px] min-w-[220px] max-w-[260px] overflow-y-hidden overflow-x-hidden whitespace-normal break-words">{item.address}</div></td>
                           <td className={className}>{item.category}</td>
                           <td className={className}>{item.sub_category}</td>
                           <td className={className}>{item.city}</td>
