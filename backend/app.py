@@ -613,7 +613,7 @@ def upload_google_map_scrape_data():
                         safe_get(row, 'PlusCode'),
                         safe_get(row, 'Closing_Hours'),
                         safe_get(row, 'latitude'),
-                        safe_get(row, 'latitude'),
+                        safe_get(row, 'latitude.1'),
                         safe_get(row, 'Instagram_Profile'),
                         safe_get(row, 'Facebook_Profile'),
                         safe_get(row, 'Linkedin_Profile'),
@@ -625,7 +625,7 @@ def upload_google_map_scrape_data():
                     # execute batch insert
                     insert_query = '''
                         INSERT INTO google_map_scrape (
-                            name, number, review_count, rating, category, address, website, email, pluscode, closing_hours, latitude, longitude, instagram_profile, facebook_profile, linkedin_profile, twitter_profile, images_folder,
+                            name, number, review_count, rating, category, address, website, email, pluscode, closing_hours, latitude, longitude, instagram_profile, facebook_profile, linkedin_profile, twitter_profile, images_folder
                         ) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
                         ON DUPLICATE KEY UPDATE
                             number = VALUES(number),
@@ -736,6 +736,17 @@ def upload_magicpin_data():
                         latitude,
                         longitude
                                 ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                                ON DUPLICATE KEY UPDATE
+                                number = VALUES(number),
+                                rating = VALUES(rating),
+                                avg_spent = VALUES(avg_spent),
+                                area = VALUES(area),
+                                subcategory = VALUES(subcategory),
+                                city = VALUES(city),
+                                category = VALUES(category),
+                                cost_for_two = VALUES(cost_for_two),
+                                latitude = VALUES(latitude),
+                                longitude = VALUES(longitude);
                 """
 
                 cursor.executemany(insert_query, chunk_data)
@@ -1059,8 +1070,7 @@ def upload_heyplaces_data():
                         ON DUPLICATE KEY UPDATE
                             number = VALUES(number),
                             website = VALUES(website),
-                            category = VALUES(category),
-                            city = VALUES(city);
+                            category = VALUES(category);
                         '''
                     cursor.executemany(insert_query, chunk_data)
                     connection.commit()
@@ -1136,8 +1146,8 @@ def upload_nearbuy_data():
                             name, address, latitude, longitude, number, rating, country, city
                         ) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)
                         ON DUPLICATE KEY UPDATE
-                            latitude = VALUES(latitude),
-                            longitude = VALUES(longitude),
+                            name = VALUES(name),
+                            address = VALUES(address),
                             number = VALUES(number),
                             rating = VALUES(rating),
                             country = VALUES(country),
@@ -1528,7 +1538,7 @@ def upload_asklaila_data():
                 chunkFile_data = pd.read_csv(file,chunksize = batch_size)
                 for chunk in chunkFile_data:
                     chunk_data = []
-                    chunk = chunk.rename(columns=lambda c: c.replace(" ", "_"))
+                    # chunk = chunk.rename(columns=lambda c: c.replace(" ", "_"))
                     for row in chunk.itertuples(index=False):
                         # print(row.phone_2)
 
@@ -2012,7 +2022,7 @@ def upload_google_data():
     return jsonify({
     "status": "success",
     "message":f'Inserted:{inserted}'
-})
+    }),200
 
             
 # amazone scrapper 
