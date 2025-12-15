@@ -496,13 +496,18 @@ def upload_shiksha_data():
         )
         cursor = connection.cursor()
 
+        if "file" not in request.files:
+            return jsonify({
+                "status":"error",
+                "message":"No file part in the request"
+            }),400
 
         if request.files:
             files = request.files.getlist("file")
             for file in files:
                 if file.filename == "":
                     continue
-                chunkFile_data = pd.read_csv(file,chunksize = batch_size)
+                chunkFile_data = pd.read_csv(file.stream,chunksize = batch_size)
                 for chunk in chunkFile_data:
                     chunk = chunk.rename(columns = lambda c:c.replace(' ','_'))
                     chunk_data = []
@@ -557,13 +562,13 @@ def upload_shiksha_data():
         return jsonify({
             "status": "error",
             "message": f"Database error:{e}"
-        }), 400
+        }), 500
     except Exception as e:
         print("Error inserting the data:",e)
         return jsonify({
             "status":"error",
             "message":f"Processiong error:{e}"
-        })
+        }),500
     finally:
         if connection and connection.is_connected():
             connection.close()
@@ -590,13 +595,18 @@ def upload_google_map_scrape_data():
         )
         cursor = connection.cursor()
 
+        if "file" not in request.files:
+            return jsonify({
+                "status":"error",
+                "message":"No file part in the request"
+            }),400
 
         if request.files:
             files = request.files.getlist("file")
             for file in files:
                 if file.filename == "":
                     continue
-                chunkFile_data = pd.read_csv(file,chunksize = batch_size)
+                chunkFile_data = pd.read_csv(file.stream,chunksize = batch_size)
                 for chunk in chunkFile_data:
                     chunk_data = []
                     chunk = chunk.rename(columns = lambda c: c.replace(' ','_'))
@@ -655,13 +665,13 @@ def upload_google_map_scrape_data():
         return jsonify({
             "status": "error",
             "message": f"Database error:{e}"
-        }), 400
+        }), 500
     except Exception as e:
         print("Error inserting the data:",e)
         return jsonify({
             "status":"error",
             "message":f"Processiong error:{e}"
-        })
+        }),500
     finally:
         if connection and connection.is_connected():
             connection.close()
@@ -692,18 +702,21 @@ def upload_magicpin_data():
         )
         cursor = connection.cursor()
 
+        if "file" not in request.files:
+            return jsonify({
+                "status":"error",
+                "message":"No file part in the request"
+            }),400
 
         if request.files:
             files = request.files.getlist("file")
-            # total_rows = []
-
             for file in files:
                 if file.filename == "":
                     continue
 
-                df = pd.read_csv(file,chunksize = batch_size)
+                chunkFile_data = pd.read_csv(file.stream,chunksize = batch_size)
 
-                for chunk in df:
+                for chunk in chunkFile_data:
                     chunk_data = []
                     for row in chunk.itertuples(index=False):
                         row_tuple = (
@@ -721,44 +734,46 @@ def upload_magicpin_data():
                         safe_get(row, 'longitude')
                         )
                         chunk_data.append(row_tuple)
-                insert_query = """
-                    INSERT INTO magicpin (
-                        name,
-                        number,
-                        rating,
-                        avg_spent,
-                        address,
-                        area,
-                        subcategory,
-                        city,
-                        category,
-                        cost_for_two,
-                        latitude,
-                        longitude
-                                ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-                                ON DUPLICATE KEY UPDATE
-                                number = VALUES(number),
-                                rating = VALUES(rating),
-                                avg_spent = VALUES(avg_spent),
-                                area = VALUES(area),
-                                subcategory = VALUES(subcategory),
-                                city = VALUES(city),
-                                category = VALUES(category),
-                                cost_for_two = VALUES(cost_for_two),
-                                latitude = VALUES(latitude),
-                                longitude = VALUES(longitude);
-                """
+                    insert_query = """
+                        INSERT INTO magicpin (
+                            name,
+                            number,
+                            rating,
+                            avg_spent,
+                            address,
+                            area,
+                            subcategory,
+                            city,
+                            category,
+                            cost_for_two,
+                            latitude,
+                            longitude
+                                    ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                                    ON DUPLICATE KEY UPDATE
+                                    number = VALUES(number),
+                                    rating = VALUES(rating),
+                                    avg_spent = VALUES(avg_spent),
+                                    area = VALUES(area),
+                                    subcategory = VALUES(subcategory),
+                                    city = VALUES(city),
+                                    category = VALUES(category),
+                                    cost_for_two = VALUES(cost_for_two),
+                                    latitude = VALUES(latitude),
+                                    longitude = VALUES(longitude);
+                    """
 
-                cursor.executemany(insert_query, chunk_data)
-                connection.commit()
+                    cursor.executemany(insert_query, chunk_data)
+                    connection.commit()
             cursor.close()
             cursor = connection.cursor()
             cursor.execute('Select count(*) from magicpin')
             inserted = cursor.fetchone()
     except Error as e:
-        print("Magicpin Upload Error:", e)
-        return jsonify({"status": "failed", "error": str(e)}), 500
-
+        print("Database Error:", e)
+        return jsonify({"status": "error", "message": f"Database Error:{e}"}), 500
+    except Exception as e:
+        print("Processing Error:", e)
+        return jsonify({"status": "error", "message": f"Processing Error:{e}"}), 500
     finally:
         if connection and connection.is_connected():
             connection.close()
@@ -782,6 +797,11 @@ def upload_freelisting_data():
             port=os.getenv('DB_PORT')
         )
         cursor = connection.cursor()
+        if "file" not in request.files:
+            return jsonify({
+                "status":"error",
+                "message":"No file part in the request"
+            }),400
 
 
         if request.files:
@@ -789,7 +809,7 @@ def upload_freelisting_data():
             for file in files:
                 if file.filename == "":
                     continue
-                chunkFile_data = pd.read_csv(file,chunksize = batch_size)
+                chunkFile_data = pd.read_csv(file.stream,chunksize = batch_size)
                 for chunk in chunkFile_data:
                     chunk_data = []
                     for row in chunk.itertuples(index=False):
@@ -835,13 +855,13 @@ def upload_freelisting_data():
         return jsonify({
             "status": "error",
             "message": f"Database error:{e}"
-        }), 400
+        }), 500
     except Exception as e:
         print("Error inserting the data:",e)
         return jsonify({
             "status":"error",
             "message":f"Processiong error:{e}"
-        })
+        }),500
     finally:
         if connection and connection.is_connected():
             connection.close()
@@ -869,13 +889,18 @@ def upload_justdial_data():
         )
         cursor = connection.cursor()
 
+        if "file" not in request.files:
+            return jsonify({
+                "status":"error",
+                "message":"No file part in the request"
+            }),400
 
         if request.files:
             files = request.files.getlist("file")
             for file in files:
                 if file.filename == "":
                     continue
-                chunkFile_data = pd.read_csv(file,chunksize = batch_size)
+                chunkFile_data = pd.read_csv(file.stream,chunksize = batch_size)
                 for chunk in chunkFile_data:
                     chunk_data = []
                     for row in chunk.itertuples(index=False):
@@ -933,13 +958,13 @@ def upload_justdial_data():
         return jsonify({
             "status": "error",
             "message": f"Database error:{e}"
-        }), 400
+        }), 500
     except Exception as e:
         print("Error inserting the data:",e)
         return jsonify({
             "status":"error",
             "message":f"Processiong error:{e}"
-        })
+        }),500
     finally:
         if connection and connection.is_connected():
             connection.close()
@@ -967,13 +992,18 @@ def upload_post_office_data():
         )
         cursor = connection.cursor()
 
+        if "file" not in request.files:
+            return jsonify({
+                "status":"error",
+                "message":"No file part in the request"
+            }),400
 
         if request.files:
             files = request.files.getlist("file")
             for file in files:
                 if file.filename == "":
                     continue
-                chunkFile_data = pd.read_csv(file,chunksize = batch_size)
+                chunkFile_data = pd.read_csv(file.stream,chunksize = batch_size)
                 for chunk in chunkFile_data:
                     chunk_data = []
                     for row in chunk.itertuples(index=False):
@@ -1007,13 +1037,13 @@ def upload_post_office_data():
         return jsonify({
             "status": "error",
             "message": f"Database error:{e}"
-        }), 400
+        }), 500
     except Exception as e:
         print("Error inserting the data:",e)
         return jsonify({
             "status":"error",
             "message":f"Processiong error:{e}"
-        })
+        }),500
     finally:
         if connection and connection.is_connected():
             connection.close()
@@ -1041,13 +1071,18 @@ def upload_heyplaces_data():
         )
         cursor = connection.cursor()
 
+        if "file" not in request.files:
+            return jsonify({
+                "status":"error",
+                "message":"No file part in the request"
+            }),400
 
         if request.files:
             files = request.files.getlist("file")
             for file in files:
                 if file.filename == "":
                     continue
-                chunkFile_data = pd.read_csv(file,chunksize = batch_size)
+                chunkFile_data = pd.read_csv(file.stream,chunksize = batch_size)
                 for chunk in chunkFile_data:
                     chunk_data = []
                     for row in chunk.itertuples(index=False):
@@ -1083,13 +1118,13 @@ def upload_heyplaces_data():
         return jsonify({
             "status": "error",
             "message": f"Database error:{e}"
-        }), 400
+        }), 500
     except Exception as e:
         print("Error inserting the data:",e)
         return jsonify({
             "status":"error",
             "message":f"Processiong error:{e}"
-        })
+        }),500
     finally:
         if connection and connection.is_connected():
             connection.close()
@@ -1116,6 +1151,11 @@ def upload_nearbuy_data():
             port=os.getenv('DB_PORT')
         )
         cursor = connection.cursor()
+        if "file" not in request.files:
+            return jsonify({
+                "status":"error",
+                "message":"No file part in the request"
+            }),400
 
 
         if request.files:
@@ -1123,7 +1163,7 @@ def upload_nearbuy_data():
             for file in files:
                 if file.filename == "":
                     continue
-                chunkFile_data = pd.read_csv(file,chunksize = batch_size)
+                chunkFile_data = pd.read_csv(file.stream,chunksize = batch_size)
                 for chunk in chunkFile_data:
                     chunk_data = []
                     for row in chunk.itertuples(index=False):
@@ -1164,13 +1204,13 @@ def upload_nearbuy_data():
         return jsonify({
             "status": "error",
             "message": f"Database error:{e}"
-        }), 400
+        }), 500
     except Exception as e:
         print("Error inserting the data:",e)
         return jsonify({
             "status":"error",
             "message":f"Processiong error:{e}"
-        })
+        }),500
     finally:
         if connection and connection.is_connected():
             connection.close()
@@ -1199,13 +1239,18 @@ def upload_pinda_data():
         )
         cursor = connection.cursor()
 
+        if "file" not in request.files:
+            return jsonify({
+                "status":"error",
+                "message":"No file part in the request"
+            }),400
 
         if request.files:
             files = request.files.getlist("file")
             for file in files:
                 if file.filename == "":
                     continue
-                chunkFile_data = pd.read_csv(file,chunksize = batch_size)
+                chunkFile_data = pd.read_csv(file.stream,chunksize = batch_size)
                 for chunk in chunkFile_data:
                     chunk_data = []
                     for row in chunk.itertuples(index=False):
@@ -1244,13 +1289,13 @@ def upload_pinda_data():
         return jsonify({
             "status": "error",
             "message": f"Database error:{e}"
-        }), 400
+        }), 500
     except Exception as e:
         print("Error inserting the data:",e)
         return jsonify({
             "status":"error",
             "message":f"Processiong error:{e}"
-        })
+        }),500
     finally:
         if connection and connection.is_connected():
             connection.close()
@@ -1277,13 +1322,18 @@ def upload_college_dunia_data():
             port=os.getenv('DB_PORT')
         )
         cursor = connection.cursor()
+        if "file" not in request.files:
+            return jsonify({
+                "status":"error",
+                "message":"No file part in the request"
+            }),400
 
         if request.files:
             files = request.files.getlist("file")
             for file in files:
                 if file.filename == "":
                     continue
-                chunkFile_data = pd.read_csv(file,chunksize = batch_size)
+                chunkFile_data = pd.read_csv(file.stream,chunksize = batch_size)
                 for chunk in chunkFile_data:
                     chunk = chunk.rename(columns = lambda c: c.replace(' ','_'))
                     chunk_data = []
@@ -1336,13 +1386,13 @@ def upload_college_dunia_data():
         return jsonify({
             "status": "error",
             "message": f"Database error:{e}"
-        }), 400
+        }), 500
     except Exception as e:
         print("Error inserting the data:",e)
         return jsonify({
             "status":"error",
             "message":f"Processiong error:{e}"
-        })
+        }),500
     finally:
         if connection and connection.is_connected():
             connection.close()
@@ -1368,13 +1418,18 @@ def upload_bank_data():
             port=os.getenv('DB_PORT')
         )
         cursor = connection.cursor()
+        if "file" not in request.files:
+            return jsonify({
+                "status":"error",
+                "message":"No file part in the request"
+            }),400
 
         if request.files:
             files = request.files.getlist("file")
             for file in files:
                 if file.filename == "":
                     continue
-                chunkFile_data = pd.read_csv(file,chunksize = batch_size)
+                chunkFile_data = pd.read_csv(file.stream,chunksize = batch_size)
                 for chunk in chunkFile_data:
                     chunk = chunk.rename(columns = lambda c: c.replace(' ','_'))
                     chunk_data = []
@@ -1419,13 +1474,13 @@ def upload_bank_data():
         return jsonify({
             "status": "error",
             "message": f"Database error:{e}"
-        }), 400
+        }), 500
     except Exception as e:
         print("Error inserting the data:",e)
         return jsonify({
             "status":"error",
             "message":f"Processiong error:{e}"
-        })
+        }),500
     finally:
         if connection and connection.is_connected():
             connection.close()
@@ -1452,6 +1507,11 @@ def upload_atm_data():
             port=os.getenv('DB_PORT')
         )
         cursor = connection.cursor()
+        if "file" not in request.files:
+            return jsonify({
+                "status":"error",
+                "message":"No file part in the request"
+            }),400
 
 
         if request.files:
@@ -1459,7 +1519,7 @@ def upload_atm_data():
             for file in files:
                 if file.filename == "":
                     continue
-                chunkFile_data = pd.read_csv(file,chunksize = batch_size)
+                chunkFile_data = pd.read_csv(file.stream,chunksize = batch_size)
                 for chunk in chunkFile_data:
                     chunk_data = []
                     for row in chunk.itertuples(index=False):
@@ -1496,13 +1556,13 @@ def upload_atm_data():
         return jsonify({
             "status": "error",
             "message": f"Database error:{e}"
-        }), 400
+        }), 500
     except Exception as e:
         print("Error inserting the data:",e)
         return jsonify({
             "status":"error",
             "message":f"Processiong error:{e}"
-        })
+        }),500
     finally:
         if connection and connection.is_connected():
             connection.close()
@@ -1529,13 +1589,18 @@ def upload_asklaila_data():
             port=os.getenv('DB_PORT')
         )
         cursor = connection.cursor()
+        if "file" not in request.files:
+            return jsonify({
+                "status":"error",
+                "message":"No file part in the request"
+            }),400
 
         if request.files:
             files = request.files.getlist("file")
             for file in files:
                 if file.filename == "":
                     continue
-                chunkFile_data = pd.read_csv(file,chunksize = batch_size)
+                chunkFile_data = pd.read_csv(file.stream,chunksize = batch_size)
                 for chunk in chunkFile_data:
                     chunk_data = []
                     # chunk = chunk.rename(columns=lambda c: c.replace(" ", "_"))
@@ -1592,13 +1657,13 @@ def upload_asklaila_data():
         return jsonify({
             "status": "error",
             "message": f"Database error:{e}"
-        }), 400
+        }), 500
     except Exception as e:
         print("Error inserting the data:",e)
         return jsonify({
             "status":"error",
             "message":f"Processiong error:{e}"
-        })
+        }),500
     finally:
         if connection and connection.is_connected():
             connection.close()
@@ -1606,7 +1671,7 @@ def upload_asklaila_data():
     return jsonify({
         "status": "success",
         "inserted_rows": inserted
-    })
+    }),200
 
 @app.route('/upload_schoolgis_data', methods=["POST"])
 def upload_schoolgis_data():
@@ -1623,13 +1688,18 @@ def upload_schoolgis_data():
             port=os.getenv('DB_PORT')
         )
         cursor = connection.cursor()
+        if "file" not in request.files:
+            return jsonify({
+                "status":"error",
+                "message":"No file part in the request"
+            }),400
 
         if request.files:
             files = request.files.getlist("file")
             for file in files:
                 if file.filename == "":
                     continue
-                chunkFile_data = pd.read_csv(file,chunksize = batch_size)
+                chunkFile_data = pd.read_csv(file.stream,chunksize = batch_size)
                 for chunk in chunkFile_data:
                     chunk_data = []
                     chunk = chunk.rename(columns=lambda c: c.replace(" ", "_"))
@@ -1673,13 +1743,13 @@ def upload_schoolgis_data():
         return jsonify({
             "status": "error",
             "message": f"Database error:{e}"
-        }), 400
+        }), 500
     except Exception as e:
         print("Error inserting the data:",e)
         return jsonify({
             "status":"error",
             "message":f"Processiong error:{e}"
-        })
+        }),500
     finally:
         if connection and connection.is_connected():
             connection.close()
@@ -1706,13 +1776,18 @@ def upload_yellow_pages_data():
             port=os.getenv('DB_PORT')
         )
         cursor = connection.cursor()
+        if "file" not in request.files:
+            return jsonify({
+                "status":"error",
+                "message":"No file part in the request"
+            }),400
 
         if request.files:
             files = request.files.getlist("file")
             for file in files:
                 if file.filename == "":
                     continue
-                chunkFile_data = pd.read_csv(file,chunksize = batch_size)
+                chunkFile_data = pd.read_csv(file.stream,chunksize = batch_size)
                 for chunk in chunkFile_data:
                     chunk = chunk.rename(columns=lambda c: c.replace(" ", "_"))
                     chunk_data = []
@@ -1761,7 +1836,7 @@ def upload_yellow_pages_data():
         return jsonify({
             "status": "error",
             "message": f"Database error:{e}"
-        }), 400
+        }), 500
     except Exception as e:
         return jsonify({
             "status":"error",
@@ -1792,12 +1867,18 @@ def upload_google_data():
            port=os.getenv('DB_PORT')
         )
         cursor = connection.cursor()
+        if "file" not in request.files:
+            return jsonify({
+                "status":"error",
+                "message":"No file part in the request"
+            }),400
+
         if request.files:
             files = request.files.getlist("file")
             for file in files:
                 if file.filename == "": # handling empty files
                     continue   
-                currFile_chunks = pd.read_csv(file,chunksize = batch_size)
+                currFile_chunks = pd.read_csv(file.stream,chunksize = batch_size)
                 for chunk in currFile_chunks:
                     chunk = chunk.rename(columns=lambda c: c.replace(" ", "_"))
                     chunk_data = []
@@ -2010,7 +2091,7 @@ def upload_google_data():
         return jsonify({
             "status": "error",
             "message": f"Database Error: {e}"
-        }), 400
+        }), 500
     except Exception as e:
         return jsonify({
             "status":"error",
