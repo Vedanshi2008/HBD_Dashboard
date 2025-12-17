@@ -1,15 +1,15 @@
-from flask import Blueprint,request,jsonify
-from tasks.upload_shiksha_task import process_shiksha_task
+from flask import Flask,request,jsonify,Blueprint
+from tasks.upload_yellow_pages_task import process_yellow_pages_task
 from explains.utils import secure_filename  
-import os
+import os 
 
-shiksha_bp = Blueprint('shiksha_bp',__name__)
-
-UPLOAD_DIR = "tmp/uploads/shiksha"
+UPLOAD_DIR = "tmp/uploads/yellow_pages"
 os.makedirs(UPLOAD_DIR,exist_ok=True)
 
-@shiksha_bp.route("/upload_shiksha_data",methods=["POST"])
-def upload_shiksha_route():
+yellow_pages_bp = Blueprint("yellow_pages_bp",__name__)
+
+@yellow_pages_bp.route("upload_yellow_pages_data",methods=["POST"])
+def upload_yellow_pages_upload():
     files = request.files.getlist("file")
     if not files:
         return jsonify({"error":"No files provided"}),400
@@ -20,7 +20,7 @@ def upload_shiksha_route():
         f.save(file_path)
         paths.append(file_path)
     try:
-        task = process_shiksha_task.delay(paths)
+        task = process_yellow_pages_task.delay(paths)
         return jsonify({
             "status":"files_accepted",
             "task_id":task.id

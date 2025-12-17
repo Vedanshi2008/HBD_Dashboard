@@ -1,15 +1,15 @@
-from flask import Blueprint,request,jsonify
-from tasks.upload_shiksha_task import process_shiksha_task
+from flask import Flask,request,jsonify,Blueprint
+from tasks.upload_freelisting_task import process_freelisting_task
 from explains.utils import secure_filename  
-import os
+import os 
 
-shiksha_bp = Blueprint('shiksha_bp',__name__)
+freelisting_bp = Blueprint('freelisting_bp',__name__)
 
-UPLOAD_DIR = "tmp/uploads/shiksha"
-os.makedirs(UPLOAD_DIR,exist_ok=True)
+UPLOAD_DIR = 'tmp/uploads/freelisting' 
+os.makedirs(UPLOAD_DIR, exist_ok=True)
 
-@shiksha_bp.route("/upload_shiksha_data",methods=["POST"])
-def upload_shiksha_route():
+@freelisting_bp.route('/upload_freelisting_data', methods=["POST"])
+def upload_freelisting_route():
     files = request.files.getlist("file")
     if not files:
         return jsonify({"error":"No files provided"}),400
@@ -20,11 +20,11 @@ def upload_shiksha_route():
         f.save(file_path)
         paths.append(file_path)
     try:
-        task = process_shiksha_task.delay(paths)
+        task = process_freelisting_task.delay(paths)
         return jsonify({
-            "status":"files_accepted",
+            "status":"file_accepted",
             "task_id":task.id
-            }),202
+        }),202
     except Exception as e:
         return jsonify({
             "error":str(e)
