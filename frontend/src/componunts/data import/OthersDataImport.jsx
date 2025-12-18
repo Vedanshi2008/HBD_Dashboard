@@ -3,15 +3,13 @@ import api from "../../utils/Api";
 
 const MAX_FILE_SIZE = 30 * 1024 * 1024; // 30MB
 
-const OthersDataUploader = () => {
+// FIX: Changed name from OthersDataUploader to OthersDataImport
+const OthersDataImport = () => {
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // Handle file selection
   const handleFileChange = (e) => {
     const selectedFiles = Array.from(e.target.files);
-
-    // Validate file size & type
     const validFiles = [];
     for (let file of selectedFiles) {
       if (!file.name.endsWith(".csv")) {
@@ -24,14 +22,11 @@ const OthersDataUploader = () => {
       }
       validFiles.push(file);
     }
-
     setFiles(validFiles);
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (files.length === 0) {
       alert("Please select at least one CSV file!");
       return;
@@ -39,12 +34,11 @@ const OthersDataUploader = () => {
 
     const formData = new FormData();
     files.forEach((file) => {
-      formData.append("files", file); // backend should accept "files"
+      formData.append("files", file); 
     });
 
     try {
       setLoading(true);
-
       const response = await api.post(
         "/upload_Others_data",
         formData,
@@ -54,7 +48,6 @@ const OthersDataUploader = () => {
           },
         }
       );
-
       console.log("Upload successful:", response.data);
       alert("Files uploaded successfully!");
       setFiles([]);
@@ -69,7 +62,6 @@ const OthersDataUploader = () => {
   return (
     <div className="p-6 max-w-xlg bg-white rounded-lg shadow mt-6">
       <h2 className="text-xl font-bold mb-4">Upload Listing CSV Files</h2>
-
       <form onSubmit={handleSubmit}>
         <input
           type="file"
@@ -79,7 +71,6 @@ const OthersDataUploader = () => {
           disabled={loading}
           className="mb-4 block w-full border border-gray-300 rounded-lg p-2"
         />
-
         {files.length > 0 && (
           <ul className="mb-4 text-sm text-gray-700">
             {files.map((file, index) => (
@@ -89,7 +80,6 @@ const OthersDataUploader = () => {
             ))}
           </ul>
         )}
-
         <button
           type="submit"
           disabled={loading}
@@ -101,25 +91,9 @@ const OthersDataUploader = () => {
         >
           {loading ? (
             <span className="flex items-center">
-              <svg
-                className="animate-spin h-5 w-5 mr-2 text-white"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                ></circle>
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8v8H4z"
-                ></path>
+              <svg className="animate-spin h-5 w-5 mr-2 text-white" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
               </svg>
               Uploading...
             </span>
