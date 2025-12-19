@@ -8,9 +8,9 @@ import {SignUp} from "./pages/auth/sign-up";
 function App() {
   return (
     <Routes>
-      {/* <Route path="/dashboard/*" element={
+      <Route path="/dashboard/*" element={
         <Dashboard /> 
-      } /> */}
+      } />
       <Route path="/dashboard/*" element={
         // <PrivateRoute>
         <Dashboard />
