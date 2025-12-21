@@ -19,14 +19,10 @@ def upload_shiksha_route():
         UPLOAD_DIR.mkdir(parents=True,exist_ok=True)
         paths = []
         for f in files:
-            print("Saving file:", f.filename)
             filename = secure_filename(f.filename)
             filepath = UPLOAD_DIR/filename
-            print("Saving to:", filepath)
             f.save(filepath)
             paths.append(str(filepath))
-
-        print("SAVED PATHS:", paths)
 
         task = process_shiksha_task.delay(paths)
 
@@ -36,6 +32,4 @@ def upload_shiksha_route():
         }), 202
 
     except Exception as e:
-        import traceback
-        traceback.print_exc()
         return jsonify({"error": str(e)}), 500

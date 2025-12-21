@@ -17,4 +17,20 @@ celery.conf.update(
 
 celery.autodiscover_tasks(["tasks"])
 
+import tasks.listings_task.upload_asklaila_task
+import tasks.listings_task.upload_atm_task
+import tasks.listings_task.upload_bank_task
+import tasks.listings_task.upload_college_dunia_task
+import tasks.listings_task.upload_freelisting_task
+import tasks.listings_task.upload_google_map_scrape_task
+import tasks.listings_task.upload_google_map_task
+import tasks.listings_task.upload_heyplaces_task
+import tasks.listings_task.upload_justdial_task
+import tasks.listings_task.upload_magicpin_task
+import tasks.listings_task.upload_nearbuy_task
+import tasks.listings_task.upload_pinda_task
+import tasks.listings_task.upload_post_office_task
+import tasks.listings_task.upload_schoolgis_task
+import tasks.listings_task.upload_yellow_pages_task
 import tasks.listings_task.upload_shiksha_task
+import tasks.products_task.upload_amazon_products_task
