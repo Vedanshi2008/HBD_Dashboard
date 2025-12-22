@@ -17,6 +17,7 @@ import {
 import { listingData } from "@/data/listingJSON"; 
 import * as XLSX from "xlsx/dist/xlsx.full.min.js";
 
+// --- ADDED "SOURCE" TO THE COLUMNS LIST HERE ---
 const defaultColumns = [
   { key: "name", label: "Name", width: 220 },
   { key: "address", label: "Address", width: 320 },
@@ -27,6 +28,7 @@ const defaultColumns = [
   { key: "category", label: "Category", width: 140 },
   { key: "city", label: "City", width: 140 },
   { key: "state", label: "State", width: 140 },
+  { key: "source", label: "Source", width: 140 }, // <--- NEW COLUMN
 ];
 
 export function CitiesReports() {
@@ -39,7 +41,7 @@ export function CitiesReports() {
 
   // --- FILTER STATES ---
   const [selectedCity, setSelectedCity] = useState(""); 
-  const [selectedSource, setSelectedSource] = useState(""); // <--- NEW STATE
+  const [selectedSource, setSelectedSource] = useState(""); 
   const [categorySearch, setCategorySearch] = useState("");
   
   const [sortField, setSortField] = useState(null);
@@ -65,12 +67,11 @@ export function CitiesReports() {
     return cities.sort();
   }, [fullData]);
 
-  // 2. UNIQUE SOURCES (NEW)
+  // 2. UNIQUE SOURCES
   const uniqueSources = useMemo(() => {
     if (!fullData.length) return [];
     const sources = [
       ...new Set(
-        // Ensure your JSON has a 'source' key (e.g. "Google Maps", "Yelp")
         fullData.map((item) => String(item.source || "").trim()).filter(Boolean)
       ),
     ];
@@ -83,19 +84,16 @@ export function CitiesReports() {
     
     const normalize = (val) => String(val || "").toLowerCase().trim();
     const targetCity = normalize(selectedCity);
-    const targetSource = normalize(selectedSource); // <--- NEW
+    const targetSource = normalize(selectedSource);
 
-    // Filter by City
     if (targetCity) {
       data = data.filter((x) => normalize(x.city) === targetCity);
     }
 
-    // Filter by Source
     if (targetSource) {
       data = data.filter((x) => normalize(x.source) === targetSource);
     }
 
-    // Filter by Category Search
     if (categorySearch) {
       const s = normalize(categorySearch);
       data = data.filter((x) => normalize(x.category).includes(s));
@@ -120,7 +118,6 @@ export function CitiesReports() {
     setTotal(sortedData.length);
   }, [sortedData, currentPage]);
 
-  // Reset page on filter change
   useEffect(() => {
     setCurrentPage(1);
   }, [selectedCity, selectedSource, categorySearch]);
@@ -180,7 +177,7 @@ export function CitiesReports() {
                 )}
               </div>
 
-              {/* --- 2. SOURCE SELECT (NEW) --- */}
+              {/* --- 2. SOURCE SELECT --- */}
               <div className="w-full sm:w-64">
                 {!loading ? (
                   <Select
@@ -189,7 +186,6 @@ export function CitiesReports() {
                     onChange={(val) => setSelectedSource(val)}
                     className="bg-white"
                     containerProps={{ className: "min-w-[100px]" }}
-                    // Force re-render to prevent ghosting
                     key={`source-select-${selectedSource || 'empty'}`} 
                     disabled={uniqueSources.length === 0}
                   >
@@ -268,7 +264,16 @@ export function CitiesReports() {
                     >
                       <div className="flex items-center justify-between">
                         <span>{col.label}</span>
-                        <ChevronUpDownIcon className="h-4 w-4" />
+                        {/* Sort Indicator */}
+                        {sortField === col.key ? (
+                          sortOrder === "asc" ? (
+                            <ChevronUpDownIcon className="h-4 w-4 text-gray-900" />
+                          ) : (
+                            <ChevronDownIcon className="h-4 w-4 text-gray-900" />
+                          )
+                        ) : (
+                          <ChevronUpDownIcon className="h-4 w-4 text-gray-300 opacity-50" />
+                        )}
                       </div>
                     </th>
                   ))}

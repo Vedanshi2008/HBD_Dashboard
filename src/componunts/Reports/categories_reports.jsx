@@ -14,7 +14,7 @@ import {
   MagnifyingGlassIcon,
   ChevronUpDownIcon,
   RectangleGroupIcon,
-  ChevronDownIcon,
+  ChevronDownIcon, // Added missing import
 } from "@heroicons/react/24/solid";
 import { listingData } from "@/data/listingJSON"; 
 import * as XLSX from "xlsx/dist/xlsx.full.min.js";
@@ -26,8 +26,7 @@ const defaultColumns = [
   { key: "address", label: "Address", width: 300 },
   { key: "phone_number", label: "Contact", width: 140 },
   { key: "city", label: "City", width: 140 },
-  // Optional: Add source column if you want to see it in the table
-  // { key: "source", label: "Source", width: 140 },
+  { key: "source", label: "Source", width: 140 },
 ];
 
 export function CategoriesReports() {
@@ -69,7 +68,7 @@ export function CategoriesReports() {
     if (!fullData.length) return [];
     const sources = [
       ...new Set(
-        // Ensure your JSON has a 'source' key, otherwise this returns empty
+        // Ensure your JSON has a 'source' key
         fullData.map((item) => String(item.source || "").trim()).filter(Boolean)
       ),
     ];

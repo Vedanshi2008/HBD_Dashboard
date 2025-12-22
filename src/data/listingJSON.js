@@ -10,7 +10,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "Navjivan Trust, B/h Gujarat Vidyapith"
+    "area": "Navjivan Trust, B/h Gujarat Vidyapith",
+    "source": "Google Maps"
   },
   {
     "name": "Zen Cafe",
@@ -23,7 +24,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "University Rd, Navrangpura"
+    "area": "University Rd, Navrangpura",
+    "source": "Google Maps"
   },
   {
     "name": "The Project Cafe",
@@ -36,7 +38,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "Yellow House, No. 7"
+    "area": "Yellow House, No. 7",
+    "source": "Google Maps"
   },
   {
     "name": "7 Star Rooftop Cafe",
@@ -49,7 +52,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "Vittal Complex, Top Floor"
+    "area": "Vittal Complex, Top Floor",
+    "source": "Google Maps"
   },
   {
     "name": "Mocha Bodakdev",
@@ -62,7 +66,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "Ground Floor, Devashish Business Park"
+    "area": "Ground Floor, Devashish Business Park",
+    "source": "Google Maps"
   },
   {
     "name": "Shambhu's Coffee Bar",
@@ -75,7 +80,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "Sardar Patel Museum, Riverfront Rd"
+    "area": "Sardar Patel Museum, Riverfront Rd",
+    "source": "Google Maps"
   },
   {
     "name": "The Messy Door Cafe Ahmedabad",
@@ -88,7 +94,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "Ground floor, Shop no 1"
+    "area": "Ground floor, Shop no 1",
+    "source": "Google Maps"
   },
   {
     "name": "Ristretto Behind The Rods",
@@ -101,7 +108,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "A-1, Maharaja Palace"
+    "area": "A-1, Maharaja Palace",
+    "source": "Google Maps"
   },
   {
     "name": "Mocha Cg Road",
@@ -114,7 +122,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "10, Vasantbaug society"
+    "area": "10, Vasantbaug society",
+    "source": "Google Maps"
   },
   {
     "name": "Kaffa Coffee Roasters",
@@ -127,7 +136,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "Kaffa Coffee Roasters oppo Atira, IIM Rd"
+    "area": "Kaffa Coffee Roasters oppo Atira, IIM Rd",
+    "source": "Google Maps"
   },
   {
     "name": "Tent Rooftop Restro & Cafe | Anniversary Celebration | Birthday Celebration in Ahmedabad",
@@ -140,7 +150,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "5th Floor, Shri Vardhman house"
+    "area": "5th Floor, Shri Vardhman house",
+    "source": "Google Maps"
   },
   {
     "name": "Cafe Natarani",
@@ -153,7 +164,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "2HXF+24R, Darpana Academy"
+    "area": "2HXF+24R, Darpana Academy",
+    "source": "Google Maps"
   },
   {
     "name": "Crush Coffee - SG Highway",
@@ -166,7 +178,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "Ground Floor Wide Angle Multiplex, Sarkhej - Gandhinagar Hwy"
+    "area": "Ground Floor Wide Angle Multiplex, Sarkhej - Gandhinagar Hwy",
+    "source": "Google Maps"
   },
   {
     "name": "Brewgarten",
@@ -179,7 +192,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "Shop 8&9, Kashi Bhuvan"
+    "area": "Shop 8&9, Kashi Bhuvan",
+    "source": "Google Maps"
   },
   {
     "name": "Turquoise Villa Bistro & Café",
@@ -192,7 +206,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "Ground Floor, Shanay l"
+    "area": "Ground Floor, Shanay l",
+    "source": "Google Maps"
   },
   {
     "name": "The Mad House",
@@ -205,7 +220,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "1st Floor, MSK House"
+    "area": "1st Floor, MSK House",
+    "source": "Google Maps"
   },
   {
     "name": "Unlocked Cafe",
@@ -218,7 +234,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "Umashankar Joshi Marg, near Girish Cold Drinks"
+    "area": "Umashankar Joshi Marg, near Girish Cold Drinks",
+    "source": "Google Maps"
   },
   {
     "name": "Kaffee Mast Hai!",
@@ -231,7 +248,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "Shree Balaji Agora Mall, Sughad"
+    "area": "Shree Balaji Agora Mall, Sughad",
+    "source": "Google Maps"
   },
   {
     "name": "Hakuna Matata cafe",
@@ -244,7 +262,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "New CG Rd, Nigam Nagar"
+    "area": "New CG Rd, Nigam Nagar",
+    "source": "Google Maps"
   },
   {
     "name": "Verve Cafe",
@@ -257,7 +276,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "temple to underbridge, 104"
+    "area": "temple to underbridge, 104",
+    "source": "Google Maps"
   },
   {
     "name": "Caffix- The Tech Cafe",
@@ -270,7 +290,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "Third Floor, 301"
+    "area": "Third Floor, 301",
+    "source": "Google Maps"
   },
   {
     "name": "Coffee By Di Bella",
@@ -283,7 +304,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "Ground Floor/2, Campus Corner"
+    "area": "Ground Floor/2, Campus Corner",
+    "source": "Google Maps"
   },
   {
     "name": "micro cafe",
@@ -296,7 +318,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "Aarashur Complex, 120 Feet Ring Rd"
+    "area": "Aarashur Complex, 120 Feet Ring Rd",
+    "source": "Google Maps"
   },
   {
     "name": "The Café",
@@ -309,7 +332,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "Stellar Building, Sindhu Bhavan Marg"
+    "area": "Stellar Building, Sindhu Bhavan Marg",
+    "source": "Google Maps"
   },
   {
     "name": "Aarambh Cafe",
@@ -322,7 +346,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "Nehru Foundation for Development, Inside CEE campus"
+    "area": "Nehru Foundation for Development, Inside CEE campus",
+    "source": "Google Maps"
   },
   {
     "name": "Zen Cafe",
@@ -335,7 +360,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "Satellite Rd, beside Sundervan"
+    "area": "Satellite Rd, beside Sundervan",
+    "source": "Google Maps"
   },
   {
     "name": "Koffee Stories | Ahmedabad",
@@ -348,7 +374,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "G-6, Sun Avenue One"
+    "area": "G-6, Sun Avenue One",
+    "source": "Google Maps"
   },
   {
     "name": "Seva Cafe",
@@ -361,7 +388,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "4th Floor Shopper's Plaza, Chimanlal Girdharlal Rd"
+    "area": "4th Floor Shopper's Plaza, Chimanlal Girdharlal Rd",
+    "source": "Google Maps"
   },
   {
     "name": "Java+",
@@ -374,7 +402,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "Courtyard Marriott, Satellite Rd"
+    "area": "Courtyard Marriott, Satellite Rd",
+    "source": "Google Maps"
   },
   {
     "name": "Brewers The Coffee Bar",
@@ -387,7 +416,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "Central Business Space, A/1"
+    "area": "Central Business Space, A/1",
+    "source": "Google Maps"
   },
   {
     "name": "Ritu's Cafe by TRC- eat fresh",
@@ -400,7 +430,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "Sangath central food court b/h 4D squre mall, Motera"
+    "area": "Sangath central food court b/h 4D squre mall, Motera",
+    "source": "Google Maps"
   },
   {
     "name": "Soul Square | Multicuisine Bistro and Cafe | Bodakdev Ahmedabad",
@@ -413,7 +444,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "56, Rajpath"
+    "area": "56, Rajpath",
+    "source": "Google Maps"
   },
   {
     "name": "Cafe Amul @ Bhat",
@@ -426,7 +458,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "3JWH+JMM, Indira Brg"
+    "area": "3JWH+JMM, Indira Brg",
+    "source": "Google Maps"
   },
   {
     "name": "Shambhu's Coffee Bar",
@@ -439,7 +472,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "H.L, Devangan Flats"
+    "area": "H.L, Devangan Flats",
+    "source": "Google Maps"
   },
   {
     "name": "COFFEE STAND ®-CG Road",
@@ -452,7 +486,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "Bhadra Raj Chambers, Swastik Char Rasta"
+    "area": "Bhadra Raj Chambers, Swastik Char Rasta",
+    "source": "Google Maps"
   },
   {
     "name": "COFFEE ByUs",
@@ -465,7 +500,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "G-05, Madhav complex"
+    "area": "G-05, Madhav complex",
+    "source": "Google Maps"
   },
   {
     "name": "Mleko",
@@ -478,7 +514,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "5, Falgun Society"
+    "area": "5, Falgun Society",
+    "source": "Google Maps"
   },
   {
     "name": "Cafe Creamoholic Motera",
@@ -491,7 +528,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "Shop no 16 17, Ground"
+    "area": "Shop no 16 17, Ground",
+    "source": "Google Maps"
   },
   {
     "name": "Danny's Coffee bar",
@@ -504,7 +542,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "7, K.D chamber"
+    "area": "7, K.D chamber",
+    "source": "Google Maps"
   },
   {
     "name": "Cafe Piano",
@@ -517,7 +556,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "TGB - The Grand Bhagwati Plot, 380"
+    "area": "TGB - The Grand Bhagwati Plot, 380",
+    "source": "Google Maps"
   },
   {
     "name": "CHAI VAAI CAFE AHMEDABAD CG Road",
@@ -530,7 +570,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "City Centre, Shop No 1B / 1C Princess Lane"
+    "area": "City Centre, Shop No 1B / 1C Princess Lane",
+    "source": "Google Maps"
   },
   {
     "name": "The Greenstraw House",
@@ -543,7 +584,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "32, River Front Rd"
+    "area": "32, River Front Rd",
+    "source": "Google Maps"
   },
   {
     "name": "CHAI SUTTA BAR AHMEDABAD",
@@ -556,7 +598,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "G - 5 Onyx Complex, near reliance fresh Ahmedabad Gujarat (Onyx Complex SV Desai Marg"
+    "area": "G - 5 Onyx Complex, near reliance fresh Ahmedabad Gujarat (Onyx Complex SV Desai Marg",
+    "source": "Google Maps"
   },
   {
     "name": "Big Scoop Cafe ( House of Boba and Coffee )",
@@ -569,7 +612,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "Shop 19, Municipal Market"
+    "area": "Shop 19, Municipal Market",
+    "source": "Google Maps"
   },
   {
     "name": "Yuvi The Cafe",
@@ -582,7 +626,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "GF-1, Shakti Arcade"
+    "area": "GF-1, Shakti Arcade",
+    "source": "Google Maps"
   },
   {
     "name": "Café Farmland",
@@ -595,7 +640,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "Karnavati Club Rd, Mumatpura"
+    "area": "Karnavati Club Rd, Mumatpura",
+    "source": "Google Maps"
   },
   {
     "name": "Shambhu's Coffee Bar",
@@ -608,7 +654,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "Sai Leela Complex, Airport Rd"
+    "area": "Sai Leela Complex, Airport Rd",
+    "source": "Google Maps"
   },
   {
     "name": "The Dark Roast",
@@ -621,7 +668,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "Showroom 'P, Mondeal Square"
+    "area": "Showroom 'P, Mondeal Square",
+    "source": "Google Maps"
   },
   {
     "name": "Street Cafe 34",
@@ -634,7 +682,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "2GH5+87R, Satellite"
+    "area": "2GH5+87R, Satellite",
+    "source": "Google Maps"
   },
   {
     "name": "Pure Beans & Creams Cafe",
@@ -647,7 +696,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "GF-4, Sun Avenue One"
+    "area": "GF-4, Sun Avenue One",
+    "source": "Google Maps"
   },
   {
     "name": "Novelchef- Cafe & Lounge",
@@ -660,7 +710,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "B Wing, Heritage Square"
+    "area": "B Wing, Heritage Square",
+    "source": "Google Maps"
   },
   {
     "name": "Shree ek foods",
@@ -673,7 +724,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "Shop -1, Ashwarath Complex"
+    "area": "Shop -1, Ashwarath Complex",
+    "source": "Google Maps"
   },
   {
     "name": "Friends coffee Bar",
@@ -686,7 +738,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "Commerce College Six Road BRTS STAND, University Rd"
+    "area": "Commerce College Six Road BRTS STAND, University Rd",
+    "source": "Google Maps"
   },
   {
     "name": "Roastery Cultúr - The Coffee Company",
@@ -699,7 +752,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "41 Spring Field Row House, Judges Bunglow Rd"
+    "area": "41 Spring Field Row House, Judges Bunglow Rd",
+    "source": "Google Maps"
   },
   {
     "name": "Patel's Cafe",
@@ -712,7 +766,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "Patel's Cafe, Road"
+    "area": "Patel's Cafe, Road",
+    "source": "Google Maps"
   },
   {
     "name": "Big Scoop Cafe (House of Boba and Coffee)",
@@ -725,7 +780,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "Shop No 7, Big Scoop Cafe"
+    "area": "Shop No 7, Big Scoop Cafe",
+    "source": "Google Maps"
   },
   {
     "name": "KK's Cafe",
@@ -738,7 +794,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "19, 20"
+    "area": "19, 20",
+    "source": "Google Maps"
   },
   {
     "name": "Mill & Co",
@@ -751,7 +808,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "Renaissance Ahmedabad, Vishwas City 1"
+    "area": "Renaissance Ahmedabad, Vishwas City 1",
+    "source": "Google Maps"
   },
   {
     "name": "Shaka",
@@ -764,7 +822,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "The Shakahari by Awadhpuri, Pushpak Complex"
+    "area": "The Shakahari by Awadhpuri, Pushpak Complex",
+    "source": "Google Maps"
   },
   {
     "name": "Ratlam Cafe House (RCH)",
@@ -777,7 +836,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "280, Sarkhej - Gandhinagar Hwy"
+    "area": "280, Sarkhej - Gandhinagar Hwy",
+    "source": "Google Maps"
   },
   {
     "name": "Vince cafe",
@@ -790,7 +850,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "Karnavati Club Rd, near to fun food battalion after sapphire lawn"
+    "area": "Karnavati Club Rd, near to fun food battalion after sapphire lawn",
+    "source": "Google Maps"
   },
   {
     "name": "Dosti cafe",
@@ -803,7 +864,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "fire station, Kalpana complex memnagar"
+    "area": "fire station, Kalpana complex memnagar",
+    "source": "Google Maps"
   },
   {
     "name": "Yuvi The Cafe | Thaltej Cross Road",
@@ -816,7 +878,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "New York Tower A, Patel Society"
+    "area": "New York Tower A, Patel Society",
+    "source": "Google Maps"
   },
   {
     "name": "Bluez Restaurant - Candlelight Dinner & Terrace Cafe",
@@ -829,7 +892,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "4th floor, supermall"
+    "area": "4th floor, supermall",
+    "source": "Google Maps"
   },
   {
     "name": "Cafe @49",
@@ -842,7 +906,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "M Square, Swastik Society"
+    "area": "M Square, Swastik Society",
+    "source": "Google Maps"
   },
   {
     "name": "MYT CAFE",
@@ -855,7 +920,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "Plot No. 578/2, Orient Club"
+    "area": "Plot No. 578/2, Orient Club",
+    "source": "Google Maps"
   },
   {
     "name": "Cafe 8154",
@@ -868,7 +934,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "A/Z, Arvind Estate"
+    "area": "A/Z, Arvind Estate",
+    "source": "Google Maps"
   },
   {
     "name": "Coffee Stand",
@@ -881,7 +948,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "11, Supath Complex"
+    "area": "11, Supath Complex",
+    "source": "Google Maps"
   },
   {
     "name": "Devi Coffee Day",
@@ -894,7 +962,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "Rivera Arcade, nr. Prahladnagar"
+    "area": "Rivera Arcade, nr. Prahladnagar",
+    "source": "Google Maps"
   },
   {
     "name": "Seven Cafe-rooftop cafe",
@@ -907,7 +976,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "New Judges Bungalow Road, Sarkhej - Gandhinagar Hwy"
+    "area": "New Judges Bungalow Road, Sarkhej - Gandhinagar Hwy",
+    "source": "Google Maps"
   },
   {
     "name": "Mysore Cafe",
@@ -920,7 +990,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "Ajanta Commercial Centre, Incometax"
+    "area": "Ajanta Commercial Centre, Incometax",
+    "source": "Google Maps"
   },
   {
     "name": "TheBlackBird's Cafe",
@@ -933,7 +1004,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "325, Pearl villa and plaza"
+    "area": "325, Pearl villa and plaza",
+    "source": "Google Maps"
   },
   {
     "name": "Cafe Cuppuccino",
@@ -946,7 +1018,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "First Floor 1 - 2, Indraprastha Business House"
+    "area": "First Floor 1 - 2, Indraprastha Business House",
+    "source": "Google Maps"
   },
   {
     "name": "Wagh Bakri Tea Lounge",
@@ -959,7 +1032,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "Capstone Building, Ground Floor Old Sharda Mandir Crossroads"
+    "area": "Capstone Building, Ground Floor Old Sharda Mandir Crossroads",
+    "source": "Google Maps"
   },
   {
     "name": "Tilla Shop & Café",
@@ -972,7 +1046,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "Brahmakshatriya Nagar Society, 3A/B"
+    "area": "Brahmakshatriya Nagar Society, 3A/B",
+    "source": "Google Maps"
   },
   {
     "name": "The Crown Cafe - Bistro",
@@ -985,7 +1060,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "Ground floor, Madhav Orchid"
+    "area": "Ground floor, Madhav Orchid",
+    "source": "Google Maps"
   },
   {
     "name": "Danny's Coffee Bar",
@@ -998,7 +1074,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "Law Garden, Ellisbridge"
+    "area": "Law Garden, Ellisbridge",
+    "source": "Google Maps"
   },
   {
     "name": "Cafe Levels",
@@ -1011,7 +1088,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "2FMX+4JX, Nr. S.K.Farm"
+    "area": "2FMX+4JX, Nr. S.K.Farm",
+    "source": "Google Maps"
   },
   {
     "name": "Friendship Cafe",
@@ -1024,7 +1102,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "Devi, 148"
+    "area": "Devi, 148",
+    "source": "Google Maps"
   },
   {
     "name": "Ark Cafe",
@@ -1037,7 +1116,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "GF-10 Saffron Complex, Opp. Central Mall"
+    "area": "GF-10 Saffron Complex, Opp. Central Mall",
+    "source": "Google Maps"
   },
   {
     "name": "Patel's Cafe",
@@ -1050,7 +1130,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "Patel's Cafe, Road"
+    "area": "Patel's Cafe, Road",
+    "source": "Google Maps"
   },
   {
     "name": "Cheesy Crazy Cafe",
@@ -1063,7 +1144,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "31, Ratna Business Square"
+    "area": "31, Ratna Business Square",
+    "source": "Google Maps"
   },
   {
     "name": "Qwiches brother's cafe",
@@ -1076,7 +1158,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "Qwiches (Brother's Cafe, Ellisbridge"
+    "area": "Qwiches (Brother's Cafe, Ellisbridge",
+    "source": "Google Maps"
   },
   {
     "name": "Bucky Gallery and Diner",
@@ -1089,7 +1172,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "Mangalbag, Nr Parimal Garden"
+    "area": "Mangalbag, Nr Parimal Garden",
+    "source": "Google Maps"
   },
   {
     "name": "Momo Cafe",
@@ -1102,7 +1186,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "Courtyard By Marriott Satellite Road, Ramdev Nagar"
+    "area": "Courtyard By Marriott Satellite Road, Ramdev Nagar",
+    "source": "Google Maps"
   },
   {
     "name": "A GOURMESSERIE - SINDHU BHAVAN",
@@ -1115,7 +1200,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "Shop No. 4, Zion Z1"
+    "area": "Shop No. 4, Zion Z1",
+    "source": "Google Maps"
   },
   {
     "name": "TheBlackBird's Cafe",
@@ -1128,7 +1214,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "325, Pearl villa and plaza"
+    "area": "325, Pearl villa and plaza",
+    "source": "Google Maps"
   },
   {
     "name": "Cafe De Italiano",
@@ -1141,7 +1228,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "Karnavati Club Rd, opposite arose restaurant"
+    "area": "Karnavati Club Rd, opposite arose restaurant",
+    "source": "Google Maps"
   },
   {
     "name": "Seven Cafe-rooftop cafe",
@@ -1154,7 +1242,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "New Judges Bungalow Road, Sarkhej - Gandhinagar Hwy"
+    "area": "New Judges Bungalow Road, Sarkhej - Gandhinagar Hwy",
+    "source": "Google Maps"
   },
   {
     "name": "1989 By Sphere Lounge",
@@ -1167,7 +1256,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "13 Floor, Rooftop"
+    "area": "13 Floor, Rooftop",
+    "source": "Google Maps"
   },
   {
     "name": "Shiva's Coffee Bar ( C.G Road )",
@@ -1180,7 +1270,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "Shop 2 Aadrsh Pan Palur Muncipal Market, Chimanlal Girdharlal Rd"
+    "area": "Shop 2 Aadrsh Pan Palur Muncipal Market, Chimanlal Girdharlal Rd",
+    "source": "Google Maps"
   },
   {
     "name": "h2o cafe",
@@ -1193,7 +1284,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "2HP3+HM9, SV Desai Marg"
+    "area": "2HP3+HM9, SV Desai Marg",
+    "source": "Google Maps"
   },
   {
     "name": "HANGOUT CAFE 24X7",
@@ -1206,7 +1298,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "Praveg's Grand Eulogia Sindhu Bhavan Road, Sardar Patel Ring Road"
+    "area": "Praveg's Grand Eulogia Sindhu Bhavan Road, Sardar Patel Ring Road",
+    "source": "Google Maps"
   },
   {
     "name": "Shambhu's Coffee Bar",
@@ -1219,7 +1312,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "Sai Leela Complex, Airport Rd"
+    "area": "Sai Leela Complex, Airport Rd",
+    "source": "Google Maps"
   },
   {
     "name": "Chaai Seth (Ahmedabad)",
@@ -1232,7 +1326,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "Char Rasta, Shop No 12"
+    "area": "Char Rasta, Shop No 12",
+    "source": "Google Maps"
   },
   {
     "name": "D'Caf - Best Cafe In Ahmedabad",
@@ -1245,7 +1340,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "Shop-1, Samudra Complex"
+    "area": "Shop-1, Samudra Complex",
+    "source": "Google Maps"
   },
   {
     "name": "George's Bistro & Cafe",
@@ -1258,7 +1354,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "B7, Shivalik Plaza"
+    "area": "B7, Shivalik Plaza",
+    "source": "Google Maps"
   },
   {
     "name": "AJAY'S CAFE RELIEF ROAD JANAK ENTERPRISE",
@@ -1271,7 +1368,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "SHOP 4407, NR RATAN POLE"
+    "area": "SHOP 4407, NR RATAN POLE",
+    "source": "Google Maps"
   },
   {
     "name": "Brother's Cafe",
@@ -1284,7 +1382,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "10 Krishna Kanan Complex Besides HDFC Bank , Nr"
+    "area": "10 Krishna Kanan Complex Besides HDFC Bank , Nr",
+    "source": "Google Maps"
   },
   {
     "name": "CUP OF TEA",
@@ -1297,7 +1396,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "Shop No -11, Sabarmati riverfront"
+    "area": "Shop No -11, Sabarmati riverfront",
+    "source": "Google Maps"
   },
   {
     "name": "Sambhu's Coffee Bar",
@@ -1310,7 +1410,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "Under, Dr Babasaheb Ambedkar Brg"
+    "area": "Under, Dr Babasaheb Ambedkar Brg",
+    "source": "Google Maps"
   },
   {
     "name": "Vintage cafe and parlour",
@@ -1323,7 +1424,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "2HHJ+37C, Rustom Cama Marg"
+    "area": "2HHJ+37C, Rustom Cama Marg",
+    "source": "Google Maps"
   },
   {
     "name": "THE CAFE CLUB Best Cafe In Ahmedabad",
@@ -1336,7 +1438,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "114,First Floor"
+    "area": "114,First Floor",
+    "source": "Google Maps"
   },
   {
     "name": "Mysore Cafe",
@@ -1349,7 +1452,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "Rakhial Road, near Vivekanand Estate"
+    "area": "Rakhial Road, near Vivekanand Estate",
+    "source": "Google Maps"
   },
   {
     "name": "PRINCE CAFE RESTAURANT AND PAN PARLOUR",
@@ -1362,7 +1466,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "Prince cafe opposite Alif jewellers Jamalpur Chakla, Jamalpur"
+    "area": "Prince cafe opposite Alif jewellers Jamalpur Chakla, Jamalpur",
+    "source": "Google Maps"
   },
   {
     "name": "Gujrat Restaurant - coffee",
@@ -1375,7 +1480,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "Vora ni chali Nearly Momin Masjid, Bapunagar"
+    "area": "Vora ni chali Nearly Momin Masjid, Bapunagar",
+    "source": "Google Maps"
   },
   {
     "name": "Daily Doze Cafe",
@@ -1388,7 +1494,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "3G49+9W4, Sarkhej - Gandhinagar Hwy"
+    "area": "3G49+9W4, Sarkhej - Gandhinagar Hwy",
+    "source": "Google Maps"
   },
   {
     "name": "Kutchi Cafe, Ahmedabad",
@@ -1401,7 +1508,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "GF 01, Himalaya Complex"
+    "area": "GF 01, Himalaya Complex",
+    "source": "Google Maps"
   },
   {
     "name": "Sea Salt Cafe, IIM Ahmedabad",
@@ -1414,7 +1522,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "IIMA Ventures, New Campus"
+    "area": "IIMA Ventures, New Campus",
+    "source": "Google Maps"
   },
   {
     "name": "Sea Salt Cafe (Take Away Only)",
@@ -1427,7 +1536,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "Krishnakunj, Nandanvan Society"
+    "area": "Krishnakunj, Nandanvan Society",
+    "source": "Google Maps"
   },
   {
     "name": "Tea Post",
@@ -1440,7 +1550,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "1, Centaur House"
+    "area": "1, Centaur House",
+    "source": "Google Maps"
   },
   {
     "name": "Creamoholic café & restro",
@@ -1453,7 +1564,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "G S 73, High Street Building"
+    "area": "G S 73, High Street Building",
+    "source": "Google Maps"
   },
   {
     "name": "Queen Cafe",
@@ -1466,7 +1578,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "YMCA Cross Road to South Bopal Road, Sarkhej - Gandhinagar Hwy"
+    "area": "YMCA Cross Road to South Bopal Road, Sarkhej - Gandhinagar Hwy",
+    "source": "Google Maps"
   },
   {
     "name": "The Pancake Story",
@@ -1479,7 +1592,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "12-A, 2"
+    "area": "12-A, 2",
+    "source": "Google Maps"
   },
   {
     "name": "Khoppcha Cafe",
@@ -1492,7 +1606,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "Newyork Trade Center, Old NH-8C"
+    "area": "Newyork Trade Center, Old NH-8C",
+    "source": "Google Maps"
   },
   {
     "name": "MYSUGARPOT TEA CAFE BAR",
@@ -1505,7 +1620,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "Shop no-GF-3, Devang Flat"
+    "area": "Shop no-GF-3, Devang Flat",
+    "source": "Google Maps"
   },
   {
     "name": "Chai Shop",
@@ -1518,7 +1634,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "Hyatt Regency Ahmedabad 17/A, Ashram Road"
+    "area": "Hyatt Regency Ahmedabad 17/A, Ashram Road",
+    "source": "Google Maps"
   },
   {
     "name": "Heartbeat rooftop cafe Ahmedabad",
@@ -1531,7 +1648,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "sports club, SAVVY SWARAAJ"
+    "area": "sports club, SAVVY SWARAAJ",
+    "source": "Google Maps"
   },
   {
     "name": "blue bottle cafe",
@@ -1544,7 +1662,8 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "Kankaria, Ahmedabad"
+    "area": "Kankaria, Ahmedabad",
+    "source": "Google Maps"
   },
   {
     "name": "Filmy adda",
@@ -1557,6 +1676,7 @@ export const listingData = [
     "subcategory": "",
     "city": "ahmedabad",
     "state": "gujarat",
-    "area": "Shop No. 3, Mehta 531 complex"
+    "area": "Shop No. 3, Mehta 531 complex",
+    "source": "Google Maps"
   }
-]
+];
