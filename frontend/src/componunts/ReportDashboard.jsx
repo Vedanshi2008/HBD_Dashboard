@@ -21,7 +21,7 @@ import {StatisticsChart} from "../widgets/charts/statistics-chart";
 import { ClockIcon } from "@heroicons/react/24/solid";
 import statisticsChartsData2 from "../data/statistics-charts-data2";
 
-export function Dasboard2() {
+export function ReportDashboard() {
   const [stats, setStats] = useState({
     productCount: 0,
     cityCount: 0,
@@ -206,4 +206,4 @@ export function Dasboard2() {
   );
 }
 
-export default Dasboard2;
+export default ReportDashboard;

@@ -42,7 +42,7 @@ import ProductDataImport from "./componunts/data import/ProductDataImport";
 import CleanListingMaster from "./componunts/clean master data/CleanListingMaster";
 import CleanProductMaster from "./componunts/clean master data/CleanProductMaster";
 import ListingCategory from "./componunts/masterdata/ListingCategory";
-import Dasboard2 from "./componunts/Dasboard2";
+import ReportDashboard from "./componunts/ReportDashboard";
 import ListingDataReport from "./componunts/ListingDataReport";
 import ProductDataReport from "./componunts/ProductDataReport";
 import MisReportTable from "./componunts/Misreport";
@@ -129,9 +129,9 @@ export const routes = [
       },
       {
         icon: <HomeIcon {...icon} />,
-        name: "dashboard",
+        name: "Data Report",
         path: "/home2",
-        element: <Dasboard2 />,
+        element: <ReportDashboard />,
       },
       {
         icon: <MagnifyingGlassIcon {...icon} />,
