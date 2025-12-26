@@ -1,5 +1,3 @@
-
-
 import React, { useState } from "react";
 import {
   Card,
@@ -25,11 +23,12 @@ export default function SearchKeyword() {
   };
 
   const handleSearch = async () => {
-    // simulate fetch from API
+    // 1. Updated Mock Data to include 'category'
     const mockData = [
-      { id: 1, name: "CityMart", type: "Business", location: "Ahmedabad" },
-      { id: 2, name: "Sweet Shop", type: "Product", location: "Surat" },
-      { id: 3, name: "Plumbing Services", type: "Service", location: "Vadodara" },
+      { id: 1, name: "CityMart", type: "Business", category: "Shopping", location: "Ahmedabad" },
+      { id: 2, name: "Sweet Shop", type: "Product", category: "Food", location: "Surat" },
+      { id: 3, name: "Plumbing Services", type: "Service", category: "Others", location: "Vadodara" },
+      { id: 4, name: "Apollo Pharmacy", type: "Business", category: "Health", location: "Ahmedabad" },
     ];
 
     // filter mock data
@@ -123,6 +122,8 @@ export default function SearchKeyword() {
                     <th className="p-3 border-b">#</th>
                     <th className="p-3 border-b">Name</th>
                     <th className="p-3 border-b">Type</th>
+                    {/* Added Category Header */}
+                    <th className="p-3 border-b">Category</th>
                     <th className="p-3 border-b">Location</th>
                   </tr>
                 </thead>
@@ -132,6 +133,8 @@ export default function SearchKeyword() {
                       <td className="p-3 border-b">{idx + 1}</td>
                       <td className="p-3 border-b">{item.name}</td>
                       <td className="p-3 border-b">{item.type}</td>
+                      {/* Added Category Data */}
+                      <td className="p-3 border-b">{item.category}</td>
                       <td className="p-3 border-b">{item.location}</td>
                     </tr>
                   ))}
