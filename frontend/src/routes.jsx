@@ -106,6 +106,7 @@ import JioMartUploader from "./componunts/data import/product import/JioMartUplo
 import ZeptoUploader from "./componunts/data import/product import/ZeptoUploader";
 import { ScraperManager } from "./layouts/Scrapper_manager";
 import ZomatoUploader from "./componunts/data import/product import/ZomatoUploader";
+import { element } from "prop-types";
 
 const icon = {
   className: "w-5 h-5 text-inherit",
@@ -180,13 +181,90 @@ export const routes = [
                 path: "/data-imports/listing-data/asklaila",
                 element: <AsklailaUploader />,
               },
-              // ... rest of uploaders
               {
                 icon: <DocumentTextIcon {...icon} />,
-                name: "Post Offices",
-                path: "/data-imports/listing-data/postoffice",
+                name: "ATM",
+                path: "/data-imports/listing-data/atm",
+                element: <AtmUploader />,
+              },
+              {
+                icon: <DocumentTextIcon {...icon} />,
+                name: "Bank Data",
+                path: "/data-imports/listing-data/bank-data",
+                element: <BankDataUploader />,
+              },
+              {
+                icon: <DocumentTextIcon {...icon} />,
+                name: "College Dunia",
+                path: "/data-imports/listing-data/college-dunia",
+                element: <CollegeDuniaUploader />,
+              },
+              {
+                icon: <DocumentTextIcon {...icon} />,
+                name: "Freelisting",
+                path: "/data-imports/listing-data/freelisting",
+                element: <FreelistingUploader />,
+              },
+              {
+                icon: <DocumentTextIcon {...icon} />,
+                name: "Google Maps",
+                path: "/data-imports/listing-data/google-maps",
+                element: <GoogleMapUploader />,
+              },
+              {
+                icon: <DocumentTextIcon {...icon} />,
+                name: "Google",
+                path: "/data-imports/listing-data/google",
+                element: <GoogleUploader />,
+              },
+              {
+                icon: <DocumentTextIcon {...icon} />,
+                name: "Hey Places",
+                path: "/data-imports/listing-data/hey-places",
+                element: <HeyPlacesUploader />,
+              },
+              {
+                icon: <DocumentTextIcon {...icon} />,
+                name: "Just Dial",
+                path: "/data-imports/listing-data/just-dial",
+                element: <JustdialUploader />,
+              },
+              {
+                icon: <DocumentTextIcon {...icon} />,
+                name: "NearBuy",
+                path: "/data-imports/listing-data/nearbuy",
+                element: <NearbuyUploader />,
+              },
+              {
+                icon: <DocumentTextIcon {...icon} />,
+                name: "Pinda",
+                path: "/data-imports/listing-data/pinda",
+                element: <PindaUploader />,
+              },
+              {
+                icon: <DocumentTextIcon {...icon} />,
+                name: "Post Office",
+                path: "/data-imports/listing-data/post-office",
                 element: <PostOfficeUploader />,
               },
+              {
+                icon: <DocumentTextIcon {...icon} />,
+                name: "Schoolgis",
+                path: "/data-imports/listing-data/schoolgis",
+                element: <SchoolgisUploader />,
+              },
+              {
+                icon: <DocumentTextIcon {...icon} />,
+                name: "Shiksha",
+                path: "/data-imports/listing-data/shiksha",
+                element: <ShikshaUploader />,
+              },
+              {
+                icon: <DocumentTextIcon {...icon} />,
+                name: "Yellow Pages",
+                path: "/data-imports/listing-data/yellow-pages",
+                element: <YellowPagesUploader />,
+              }
             ],
           },
           {
@@ -199,7 +277,48 @@ export const routes = [
                 path: "/data-imports/product-data/amazon",
                 element: <AmazonUploader />,
               },
-              // ... rest of product uploaders
+              {
+                icon: <DocumentTextIcon {...icon} />,
+                name: "BigBasket",
+                path: "/data-imports/product-data/big-basket",
+                element: <BigBasketUploader />,
+              },
+              {
+                icon: <DocumentTextIcon {...icon} />,
+                name: "Blinkit",
+                path: "/data-imports/product-data/blinkit",
+                element: <BlinkitUploader />,
+              },
+              {
+                icon: <DocumentTextIcon {...icon} />,
+                name: "D-Mart",
+                path: "/data-imports/product-data/d-mart",
+                element: <DMartUploader />,
+              },
+              {
+                icon: <DocumentTextIcon {...icon} />,
+                name: "Flipkart",
+                path: "/data-imports/product-data/flipkart",
+                element: <FlipkartUploader />,
+              },
+              {
+                icon: <DocumentTextIcon {...icon} />,
+                name: "India Mart",
+                path: "/data-imports/product-data/india-mart",
+                element: <IndiaMartUploader />,
+              },
+              {
+                icon: <DocumentTextIcon {...icon} />,
+                name: "JioMart",
+                path: "/data-imports/product-data/jio-mart",
+                element: <JioMartUploader />,
+              },
+              {
+                icon: <DocumentTextIcon {...icon} />,
+                name: "Zepto",
+                path: "/data-imports/product-data/zepto",
+                element: <ZeptoUploader />,
+              },
               {
                 icon: <DocumentTextIcon {...icon} />,
                 name: "Zomato",
@@ -310,6 +429,102 @@ export const routes = [
             path: "listing-master-data/complete-data",
             element: <ListingComplete />,
           },
+          {
+            icon: <TableCellsIcon {...icon} />,
+            name: "AskLaila Data",
+            path: "listing-master-data/asklaila-data",
+            element: <AsklailaData />,
+          },
+          {
+            icon: <TableCellsIcon {...icon} />,
+            name: "ATM Data",
+            path: "listing-master-data/atm-data",
+            element: <AtmData />,
+          },
+          {
+            icon: <TableCellsIcon {...icon} />,
+            name: "Bank Data",
+            path: "listing-master-data/bank-data",
+            element: <BankData />,
+          },
+          {
+            icon: <TableCellsIcon {...icon} />,
+            name: "College Dunia Data",
+            path: "listing-master-data/college-dunia-data",
+            element: <CollegeDuniaData />,
+          }, 
+          {
+            icon: <TableCellsIcon {...icon} />,
+            name: "Duplicate Data",
+            path: "listing-master-data/duplicate-data",
+            element: <DuplicateData />,
+          }, 
+          {
+            icon: <TableCellsIcon {...icon} />,
+            name: "Google Data",
+            path: "listing-master-data/google-data",
+            element: <GoogleData />,
+          },
+          {
+            icon: <TableCellsIcon {...icon} />,
+            name: "Google Map Data",
+            path: "listing-master-data/google-map-data",
+            element: <GoogleMapData />,
+          },
+          {
+            icon: <TableCellsIcon {...icon} />,
+            name: "Hey Places Data",
+            path: "listing-master-data/hey-places-data",
+            element: <HeyPlacesData />,
+          }, 
+          {
+            icon: <TableCellsIcon {...icon} />,
+            name: "Just Dial Data",
+            path: "listing-master-data/just-dial-data",
+            element: <JustDialData />,
+          },
+          {
+            icon: <TableCellsIcon {...icon} />,
+            name: "Magic Pin Data",
+            path: "listing-master-data/magic-pin-data",
+            element: <MagicPinData />,
+          },
+          {
+            icon: <TableCellsIcon {...icon} />,
+            name: "Near Buy Data",
+            path: "listing-master-data/near-buy-data",
+            element: <NearBuyData />,
+          },
+          {
+            icon: <TableCellsIcon {...icon} />,
+            name: "Pinda Data",
+            path: "listing-master-data/pinda-data",
+            element: <PindaData />,
+          },
+          {
+            icon: <TableCellsIcon {...icon} />,
+            name: "PO India Data",
+            path: "listing-master-data/po-india-data",
+            element: <POIndiaData />,
+          },
+          {
+            icon: <TableCellsIcon {...icon} />,
+            name: "Schoolgis Data",
+            path: "listing-master-data/schoolgis-data",
+            element: <SchoolgisData />,
+          }, 
+          {
+            icon: <TableCellsIcon {...icon} />,
+            name: "Shiksha Data",
+            path: "listing-master-data/shiksha-data",
+            element: <ShikshaData />,
+          },
+          {
+            icon: <TableCellsIcon {...icon} />,
+            name: "Yellow Pages Data",
+            path: "listing-master-data/yellow-pages-data",
+            element: <YellowPagesData />,
+          },
           // ... rest of listing data
           {
             icon: <XCircleIcon {...icon} />,
@@ -329,12 +544,65 @@ export const routes = [
             path: "product-master-data/complete-data",
             element: <ProductComplete />,
           },
-          // ... rest of product data
+          {
+            icon: <TableCellsIcon {...icon} />,
+            name: "Amazon Data",
+            path: "product-master-data/amazon-data",
+            element: <AmazonData />,
+          },
+          {
+            icon: <TableCellsIcon {...icon} />,
+            name: "BigBasket Data",
+            path: "product-master-data/bigbasket-data",
+            element: <BigBasketData />,
+          },
+          {
+            icon: <TableCellsIcon {...icon} />,
+            name: "BlinkIt Data",
+            path: "product-master-data/blinkit-data",
+            element: <BlinkIt />,
+          },
+          {
+            icon: <TableCellsIcon {...icon} />,
+            name: "D-Mart Data",
+            path: "product-master-data/d-mart-data",
+            element: <DmartData />,
+          },
+          {
+            icon: <TableCellsIcon {...icon} />,
+            name: "Flipkart Data",
+            path: "product-master-data/flipkart-data",
+            element: <FlipkartData />,
+          },
           {
             icon: <TableCellsIcon {...icon} />,
             name: "India Mart Data",
             path: "listing-master-data/india-mart-data",
             element: <IndiaMart />,
+          },
+          {
+            icon: <TableCellsIcon {...icon} />,
+            name: "JioMart Data",
+            path: "product-master-data/jiomart-data",
+            element: <JioMartData />,
+          },
+          {
+            icon: <TableCellsIcon {...icon} />,
+            name: "Zepto Data",
+            path: "product-master-data/zepto-data",
+            element: <ZeptoData />,
+          },
+          {
+            icon: <TableCellsIcon {...icon} />,
+            name: "Zomato Data",
+            path: "product-master-data/zomato-data",
+            element: <ZomatoData />,
+          },
+          {
+            icon: <XCircleIcon {...icon} />,
+            name: "Incomplete Data",
+            path: "product-master-data/incomplete-data",
+            element: <ProductIncomplate />,
           }
         ]
       },
