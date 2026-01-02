@@ -1,6 +1,6 @@
-# routes/upload_item_csv.py
+# backend/services/uploads/item_csv_service.py
 
-from flask import Blueprint, request, jsonify
+from flask import jsonify
 import pandas as pd
 from io import StringIO
 import numpy as np
@@ -10,21 +10,18 @@ from sqlalchemy.exc import SQLAlchemyError
 from extensions import db
 from model.item_csv_model import ItemData
 
-item_csv_bp = Blueprint("item", __name__)
 
-
-@item_csv_bp.route("/upload_csv_item_data", methods=["POST"])
-def upload_csv_item_data():
+def upload_item_csv(request):
     try:
         # -----------------------------
         # File validation
         # -----------------------------
         if "file" not in request.files:
-            return jsonify({"error": "No file part"}), 400
+            return jsonify({"error": "No file uploaded"}), 400
 
         file = request.files["file"]
-        if file.filename.strip() == "":
-            return jsonify({"error": "No selected file"}), 400
+        if not file or file.filename.strip() == "":
+            return jsonify({"error": "Empty file name"}), 400
 
         # -----------------------------
         # Read CSV
@@ -32,10 +29,13 @@ def upload_csv_item_data():
         contents = file.read().decode("utf-8", errors="ignore")
         df = pd.read_csv(StringIO(contents))
 
+        if df.empty:
+            return jsonify({"error": "CSV file is empty"}), 400
+
         # Normalize NaN
         df = df.replace({np.nan: None, "nan": None, "NaN": None})
 
-        # Convert numeric safely
+        # Convert numeric fields safely
         numeric_fields = [
             "ratings", "avg_spent", "cost_for_two",
             "pincode", "latitude", "longitude",
@@ -50,22 +50,18 @@ def upload_csv_item_data():
             if val is None:
                 return None
             val = str(val).strip()
-            if val.lower() in {"nan", "null", "none", ""}:
-                return None
-            return val
+            return None if val.lower() in {"nan", "null", "none", ""} else val
 
         inserted = 0
         skipped = 0
         errors = []
 
         # -----------------------------
-        # Insert rows safely
+        # Insert rows
         # -----------------------------
         for index, row in df.iterrows():
             try:
                 name = safe_str(row.get("name"))
-
-                # REQUIRED FIELD CHECK
                 if not name:
                     skipped += 1
                     errors.append({
@@ -118,6 +114,7 @@ def upload_csv_item_data():
         db.session.commit()
 
         return jsonify({
+            "success": True,
             "message": "Item CSV processed successfully",
             "inserted_rows": inserted,
             "skipped_rows": skipped,
@@ -134,4 +131,7 @@ def upload_csv_item_data():
     except Exception as e:
         db.session.rollback()
         traceback.print_exc()
-        return jsonify({"error": str(e)}), 500
+        return jsonify({
+            "error": "Unexpected error occurred",
+            "details": str(e)
+        }), 500

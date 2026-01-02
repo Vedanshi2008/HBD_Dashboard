@@ -1,34 +1,56 @@
-# model/items.py
-from sqlalchemy import Column, Integer, String, Float, Text , BigInteger
-from database.session import Base  # <-- app.database.session ke jagah sirf database.session
+# model/item_csv_model.py
 
-class ItemData(Base):
-    __tablename__ = "item_data"
+from extensions import db
+from sqlalchemy.sql import func
 
-    id = Column(BigInteger, primary_key=True, index=True)
-    category = Column(String(255))
-    city = Column(String(500),primary_key=True)
-    name = Column(String(255),primary_key=True)
-    area = Column(String(255))
-    address = Column(String(500))
-    phone_no_1 = Column(String(255))
-    phone_no_2 = Column(String(255))
-    source = Column(String(500))
-    ratings = Column(Float)
-    sub_category = Column(String(500))
-    state = Column(String(500))
-    country = Column(String(500))
-    email = Column(String(255))
-    latitude = Column(Float)
-    longitude = Column(Float)
-    reviews = Column(String(500))
-    facebook_url = Column(String(500))
-    linkedin_url = Column(String(500))
-    twitter_url = Column(String(500))
-    description = Column(Text)
-    pincode = Column(Integer)
-    virtual_phone_no = Column(String(255))
-    whatsapp_no = Column(String(255))
-    phone_no_3 = Column(String(255))
-    avg_spent = Column(Integer)
-    cost_for_two = Column(Integer)
+
+class ItemData(db.Model):
+    __tablename__ = "items"
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+
+    # REQUIRED
+    name = db.Column(db.String(255), nullable=False)
+
+    # OPTIONAL TEXT FIELDS
+    description = db.Column(db.Text, nullable=True)
+    category = db.Column(db.String(255), nullable=True)
+    sub_category = db.Column(db.String(255), nullable=True)
+    city = db.Column(db.String(255), nullable=True)
+    area = db.Column(db.String(255), nullable=True)
+    address = db.Column(db.Text, nullable=True)
+
+    # CONTACTS
+    phone_no_1 = db.Column(db.String(50), nullable=True)
+    phone_no_2 = db.Column(db.String(50), nullable=True)
+    phone_no_3 = db.Column(db.String(50), nullable=True)
+    whatsapp_no = db.Column(db.String(50), nullable=True)
+    virtual_phone_no = db.Column(db.String(50), nullable=True)
+    email = db.Column(db.String(255), nullable=True)
+
+    # SOCIAL
+    facebook_url = db.Column(db.Text, nullable=True)
+    linkedin_url = db.Column(db.Text, nullable=True)
+    twitter_url = db.Column(db.Text, nullable=True)
+
+    # META
+    source = db.Column(db.String(100), nullable=True)
+    state = db.Column(db.String(100), nullable=True)
+    country = db.Column(db.String(100), nullable=True)
+    reviews = db.Column(db.Text, nullable=True)
+
+    # NUMERIC
+    ratings = db.Column(db.Float, nullable=True)
+    avg_spent = db.Column(db.Float, nullable=True)
+    cost_for_two = db.Column(db.Float, nullable=True)
+    pincode = db.Column(db.Integer, nullable=True)
+    latitude = db.Column(db.Float, nullable=True)
+    longitude = db.Column(db.Float, nullable=True)
+    price = db.Column(db.Float, nullable=True)
+    quantity = db.Column(db.Integer, nullable=True)
+
+    created_at = db.Column(
+        db.TIMESTAMP,
+        server_default=func.now(),
+        nullable=False
+    )

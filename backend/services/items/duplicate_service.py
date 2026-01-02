@@ -1,6 +1,6 @@
-# routes/item_duplicate.py
+# backend/services/items/duplicate_service.py
 
-from flask import Blueprint, request, jsonify
+from flask import request, jsonify
 from sqlalchemy import func, and_
 from sqlalchemy.exc import SQLAlchemyError
 
@@ -8,13 +8,10 @@ from extensions import db
 from model.item_csv_model import ItemData
 
 
-item_duplicate_bp = Blueprint("item_duplicate", __name__)
-
-
 # --------------------------------------------------
 # Serializer
 # --------------------------------------------------
-def serialize(item):
+def _serialize(item):
     return {
         column.name: getattr(item, column.name)
         for column in item.__table__.columns
@@ -22,16 +19,17 @@ def serialize(item):
 
 
 # --------------------------------------------------
-# DUPLICATES FETCH (paginated)
+# FETCH DUPLICATE ITEMS (PAGINATED)
 # --------------------------------------------------
-@item_duplicate_bp.route("/items/duplicates", methods=["GET"])
 def get_duplicate_items():
     try:
         page = int(request.args.get("page", 1))
         limit = int(request.args.get("limit", 10))
         offset = (page - 1) * limit
 
-        # Step 1: Find duplicate groups
+        # -----------------------------
+        # Step 1: Identify duplicate groups
+        # -----------------------------
         duplicate_groups = (
             db.session.query(
                 ItemData.name,
@@ -56,7 +54,9 @@ def get_duplicate_items():
             .subquery()
         )
 
-        # Step 2: Join to fetch all duplicate rows
+        # -----------------------------
+        # Step 2: Join to get all duplicates
+        # -----------------------------
         duplicates_query = (
             db.session.query(ItemData)
             .join(
@@ -74,9 +74,11 @@ def get_duplicate_items():
             .order_by(ItemData.id)
         )
 
+        # -----------------------------
         # Step 3: Remove first occurrence per group
-        result = []
+        # -----------------------------
         seen = set()
+        duplicates = []
 
         for item in duplicates_query.offset(offset).limit(limit).all():
             key = (
@@ -89,11 +91,13 @@ def get_duplicate_items():
                 item.address,
             )
             if key in seen:
-                result.append(serialize(item))
+                duplicates.append(_serialize(item))
             else:
                 seen.add(key)
 
-        # Step 4: Count total duplicates (excluding first entry)
+        # -----------------------------
+        # Step 4: Count total duplicates
+        # -----------------------------
         total_duplicates = (
             db.session.query(func.sum(duplicate_groups.c.count - 1)).scalar()
         ) or 0
@@ -104,7 +108,7 @@ def get_duplicate_items():
             "limit": limit,
             "total": total_duplicates,
             "total_pages": (total_duplicates + limit - 1) // limit,
-            "items": result,
+            "items": duplicates,
         }), 200
 
     except SQLAlchemyError as e:
@@ -118,16 +122,17 @@ def get_duplicate_items():
 
 
 # --------------------------------------------------
-# DUPLICATES DELETE
+# DELETE SELECTED DUPLICATES
 # --------------------------------------------------
-@item_duplicate_bp.route("/items/duplicates", methods=["DELETE"])
-def delete_selected_duplicates():
+def delete_duplicate_items():
     try:
         data = request.get_json(silent=True) or {}
         ids_to_delete = data.get("ids", [])
 
         if not ids_to_delete:
-            return jsonify({"error": "No IDs provided"}), 400
+            return jsonify({
+                "error": "No IDs provided"
+            }), 400
 
         deleted_count = (
             db.session.query(ItemData)

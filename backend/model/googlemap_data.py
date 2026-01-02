@@ -1,21 +1,27 @@
-from sqlalchemy import Column, Integer, String, Text, Float, TIMESTAMP
-from sqlalchemy.ext.declarative import declarative_base
+# model/googlemap_data.py
 
-Base = declarative_base()
+from extensions import db
+from sqlalchemy.sql import func
 
-class GooglemapData(Base):
-    __tablename__ = "businesses"   # use your actual table name
 
-    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    name = Column(String(500))
-    address = Column(Text)
-    website = Column(String(500))
-    phone_number = Column(String(100))
-    reviews_count = Column(Integer)
-    reviews_average = Column(Float)
-    category = Column(String(255))
-    subcategory = Column(String(500))
-    city = Column(String(100))
-    state = Column(String(100))
-    area = Column(String(500))
-    created_at = Column(TIMESTAMP)
+class GooglemapData(db.Model):
+    __tablename__ = "businesses"
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+
+    name = db.Column(db.String(500), nullable=True)
+    address = db.Column(db.Text, nullable=True)
+    website = db.Column(db.String(500), nullable=True)
+    phone_number = db.Column(db.String(100), nullable=True)
+
+    reviews_count = db.Column(db.Integer, nullable=True)
+    reviews_average = db.Column(db.Float, nullable=True)
+
+    category = db.Column(db.String(255), nullable=True)
+    subcategory = db.Column(db.String(500), nullable=True)
+
+    created_at = db.Column(
+        db.TIMESTAMP,
+        server_default=func.now(),
+        nullable=False
+    )
