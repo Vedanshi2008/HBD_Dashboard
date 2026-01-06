@@ -14,6 +14,7 @@ import {
   ArrowUpTrayIcon,
 } from "@heroicons/react/24/solid";
 
+import MasterDataRegistry from "./componunts/masterdata/MasterDataRegistry";
 import { Home } from "./pages/dashboard/home";
 import { Profile } from "./pages/dashboard/profile";
 import { Tables } from "./pages/dashboard/tables";
@@ -357,6 +358,12 @@ export const routes = [
         icon: <TableCellsIcon {...icon} />,
         name: "Master data",
         children: [
+          {
+            icon: <TableCellsIcon {...icon} />,
+            name: "Master Data Registry",
+            path: "/masterdata/master-registry",
+            element: <MasterDataRegistry />,
+          },
           {
             icon: <TableCellsIcon {...icon} />,
             name: "Location Master",

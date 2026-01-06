@@ -820,7 +820,7 @@ from routes.upload_item_csv import item_csv_bp
 app.register_blueprint(item_csv_bp)
 
 # complate incomplate data
-from routes.amazon_product import amazon_products_bp
+from routes.product_routes.amazon_product import amazon_products_bp
 app.register_blueprint(amazon_products_bp)
 
 # items data complate/incomplate
