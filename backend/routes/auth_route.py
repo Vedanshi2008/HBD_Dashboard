@@ -53,28 +53,37 @@ def signup():
 
 
 # Login
+# Login
 @auth_bp.route("/login", methods=["POST"])
 def login():
+    print("--- LOGIN ATTEMPT STARTED ---") # Debug Print
     data = request.json or {}
     email = data.get("email", "").strip()
     password = data.get("password", "")
 
+    print(f"1. Received Email: '{email}'") # Debug Print
+    print(f"2. Password provided: {'Yes' if password else 'No'}") # Debug Print
+
     # Validate required fields
     if not email or not password:
+        print("--- FAILED: Missing email or password ---")
         return jsonify({"message": "Email and password are required"}), 400
 
     user = User.query.filter_by(email=email).first()
 
-    if not user or not user.check_password(password):
+    if not user:
+        print(f"--- FAILED: User '{email}' not found in database ---")
         return jsonify({"message": "Invalid credentials"}), 401
 
+    print(f"3. User found: ID {user.id}, Hash: {user.password_hash[:10]}...") # Debug Print
+
+    if not user.check_password(password):
+        print("--- FAILED: Password hash mismatch ---")
+        return jsonify({"message": "Invalid credentials"}), 401
+
+    print("--- SUCCESS: Credentials valid, generating token ---")
     token = create_access_token(identity=str(user.id))
     return jsonify({"token": token}), 200
-
-
-    return jsonify(message=f"Welcome {current_user}, you have accessed a protected route!"), 200
-
-
 # Forgot Password - Step 1: Send OTP
 @auth_bp.route("/forgot-password", methods=["POST"])
 def forgot_password():

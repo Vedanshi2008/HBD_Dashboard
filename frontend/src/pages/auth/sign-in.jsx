@@ -30,7 +30,7 @@ export function SignIn() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const res = await api.post("/login", { email, password });
+      const res = await api.post("/auth/login", { email, password });
       
       // Context wala login use kar rahe hain
       login(res.data.token); 

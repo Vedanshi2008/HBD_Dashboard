@@ -5,5 +5,5 @@ from flask_mail import Mail
 
 db = SQLAlchemy()
 jwt = JWTManager()
-cors = CORS
+cors = CORS()
 mail = Mail()

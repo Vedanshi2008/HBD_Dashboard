@@ -16,6 +16,6 @@ sqlalchemy
 pymysql
 celery
 redis
-Flask-Mail
+Flask-Mail==0.9.1
 cryptography
 pymysql

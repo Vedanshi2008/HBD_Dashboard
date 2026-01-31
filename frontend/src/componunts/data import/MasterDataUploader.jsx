@@ -12,70 +12,68 @@ const MasterDataUploader = () => {
   };
 
   const handleUpload = async (e) => {
-    e.preventDefault(); // Prevents page reload
+    e.preventDefault(); 
     if (!file) return alert("Select a file first!");
 
     const formData = new FormData();
     formData.append("file", file);
 
-    console.log("Starting upload..."); // Debug Log 1
-
     try {
       setLoading(true);
       
-      const response = await api.post("/upload/master", formData, {
+      // CHANGED: We hit a specific endpoint for direct master table ingestion
+      const response = await api.post("/upload/master-direct", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      console.log("Upload Response:", response.data); // Debug Log 2
+      console.log("Upload Success:", response.data);
 
-      // Check specifically for task_id
-      const task_id = response.data.task_id;
-
-      if (task_id) {
-        console.log("Redirecting to task:", task_id); // Debug Log 3
-        
-        // --- FIX: Added '/dashboard' prefix based on your routes.js layout ---
-        // Try navigating to the full path. 
-        // If your URL bar usually shows /dashboard/home, this needs to be /dashboard/masterdata/dashboard
-        navigate(`/dashboard/masterdata/dashboard?task_id=${task_id}`);
-        
-      } else {
-        console.error("No task_id in response");
-        alert("Upload finished, but no Task ID was returned by the server.");
-      }
+      // CHANGED: No need to wait for a task_id. 
+      // We assume direct upload is immediate, so we go straight to the main Dashboard
+      // to see the new data in the 'master_table'.
+      navigate(`/dashboard/masterdata/dashboard`);
 
     } catch (error) {
       console.error("Master Upload Error:", error);
-      alert("Upload failed. Check console.");
+      alert("Upload failed. Check console for details.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="p-6 bg-white rounded-lg shadow-md border-t-4 border-gray-900">
-      <h2 className="text-xl font-bold mb-4 text-gray-900">Upload Master Data CSV</h2>
-      <p className="text-sm text-gray-500 mb-4">
-        This file will populate the central database. You will be redirected automatically.
+    <div className="p-6 bg-white rounded-lg shadow-md border-t-4 border-indigo-600">
+      <h2 className="text-xl font-bold mb-4 text-gray-900">Import to Master Table</h2>
+      <p className="text-sm text-gray-500 mb-6">
+        This will directly insert records into the <strong>master_table</strong>. 
+        Ensure your CSV headers match the database schema.
       </p>
       
       <form onSubmit={handleUpload} className="flex flex-col gap-4">
-        <input
-          type="file"
-          accept=".csv"
-          onChange={handleFileChange}
-          className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-gray-700 file:text-white hover:file:bg-gray-900"
-        />
+        <div className="relative border-2 border-dashed border-gray-300 rounded-lg p-6 hover:bg-gray-50 transition text-center">
+            <input
+              type="file"
+              accept=".csv"
+              onChange={handleFileChange}
+              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+            />
+            <div className="text-gray-500">
+                {file ? (
+                    <span className="font-semibold text-indigo-600">{file.name}</span>
+                ) : (
+                    <span>Click to browse or drag CSV here</span>
+                )}
+            </div>
+        </div>
         
         <button
           type="submit"
           disabled={loading || !file}
-          className={`py-2 px-4 rounded font-bold text-white transition-all ${
-            loading ? "bg-gray-400" : "bg-gray-700 hover:bg-gray-900"
+          className={`py-3 px-4 rounded-lg font-bold text-white shadow-sm transition-all ${
+            loading ? "bg-indigo-300 cursor-not-allowed" : "bg-indigo-600 hover:bg-indigo-700 hover:shadow-md"
           }`}
         >
-          {loading ? "Processing..." : "Upload Master CSV"}
+          {loading ? "Importing Data..." : "Upload to Database"}
         </button>
       </form>
     </div>

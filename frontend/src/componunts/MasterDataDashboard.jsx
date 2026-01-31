@@ -11,8 +11,7 @@ import {
   QueueListIcon,
   CheckCircleIcon,
   XCircleIcon,
-  GlobeAltIcon,
-  ArrowPathIcon 
+  GlobeAltIcon
 } from "@heroicons/react/24/solid";
 
 const MasterDataDashboard = () => {
@@ -20,88 +19,63 @@ const MasterDataDashboard = () => {
   const taskId = searchParams.get("task_id");
 
   const [stats, setStats] = useState(null);
-  const [status, setStatus] = useState("LOADING"); // LOADING, PROCESSING, COMPLETED, FAILED
+  const [status, setStatus] = useState("LOADING"); 
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!taskId) {
-      setError("No Task ID found. Please upload a file.");
-      setStatus("FAILED");
-      return;
-    }
-
     let isMounted = true;
-    let pollTimer = null;
 
-    const fetchReport = async () => {
+    const fetchSQLData = async () => {
       try {
-        const res = await api.get(`/upload/report/${taskId}`);
+        const endpoint = taskId 
+            ? `/api/master-dashboard-stats?task_id=${taskId}` 
+            : `/api/master-dashboard-stats`;
+
+        const res = await api.get(endpoint);
         
         if (!isMounted) return;
 
-        const reportStatus = res.data.status;
-        setStatus(reportStatus);
+        setStatus("COMPLETED");
 
-        // Parse Stats if available
         if (res.data.stats) {
-            const parsedStats = typeof res.data.stats === 'string' 
-              ? JSON.parse(res.data.stats) 
-              : res.data.stats;
-            setStats(parsedStats);
+            setStats(res.data.stats);
         }
-
-        // --- AUTO-POLL LOGIC ---
-        // If the worker is still running, check again in 2 seconds
-        if (reportStatus === "PROCESSING" || reportStatus === "PENDING") {
-            pollTimer = setTimeout(fetchReport, 2000);
-        } 
 
       } catch (err) {
         console.error("Fetch error:", err);
-        if (isMounted) setError("Failed to connect to backend.");
+        if (isMounted) {
+            setError("Failed to load master data.");
+            setStatus("FAILED"); // We mark as failed, but won't block the UI
+        }
       }
     };
 
-    fetchReport();
+    fetchSQLData();
 
-    // Cleanup to prevent memory leaks if user leaves page
-    return () => {
-        isMounted = false;
-        if (pollTimer) clearTimeout(pollTimer);
-    };
+    return () => { isMounted = false; };
   }, [taskId]);
 
-  // --- LOADER STATE (If Processing) ---
-  if (status === "LOADING" || status === "PROCESSING" || status === "PENDING") {
+  // --- LOADER STATE ---
+  if (status === "LOADING") {
     return (
       <div className="flex h-screen items-center justify-center bg-gray-50 flex-col">
         <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-indigo-600 mb-6"></div>
-        <h2 className="text-2xl font-bold text-gray-700 animate-pulse">Processing Master Data...</h2>
-        <p className="text-gray-500 mt-2">Please wait, this updates automatically.</p>
-        <p className="text-xs text-gray-400 mt-4 font-mono">Task ID: {taskId}</p>
+        <h2 className="text-2xl font-bold text-gray-700 animate-pulse">Loading Live Data...</h2>
       </div>
     );
   }
 
-  if (!taskId) {
-      return (
-        <div className="p-10 text-center">
-            <h3 className="text-xl font-bold text-gray-700 mb-2">No Report Selected</h3>
-            <p className="text-gray-500">Please upload a file to generate a dashboard report.</p>
-        </div>
-      );
-  }
+  // REMOVED: The blocking "FAILED" return statement. 
+  // Now, if status is FAILED, it proceeds to render the dashboard with default data.
 
-  // DEFAULT DATA STRUCTURE 
+  // DEFAULT DATA STRUCTURE (Safe Fallback)
+  // If stats is null (due to error or failure), this object ensures 0s are displayed.
   const data = stats || {
-    total_listings: 0,
+    total_records: 0,
     total_products: 0,
-    listing_status: { complete: 0, incomplete: 0 },
-    scrape_status: { pending_city: 0, pending_city_category: 0 },
     source_stats: [], 
     city_counts: [], 
     category_counts: [], 
-    
     total_cities: 0,
     total_areas: 0,
     total_categories: 0,
@@ -111,12 +85,22 @@ const MasterDataDashboard = () => {
   };
 
   const displayField = (value) => {
-    if (error && !stats) return "-";
     return (value !== undefined && value !== null) ? value.toLocaleString() : "0";
   };
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
+      
+      {/* ERROR ALERT (Non-blocking) - Allows user to see dashboard but know data failed */}
+      {status === "FAILED" && (
+        <div className="mb-6 bg-red-50 border-l-4 border-red-500 p-4 rounded-r shadow-sm flex items-center justify-between">
+           <div>
+              <p className="font-bold text-red-700">Data Connection Issue</p>
+              <p className="text-sm text-red-600">Could not fetch live data. Showing default values (0). Error: {error}</p>
+           </div>
+           <ExclamationTriangleIcon className="h-6 w-6 text-red-400 opacity-50" />
+        </div>
+      )}
       
       {/* 1. HERO SECTION */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
@@ -125,8 +109,8 @@ const MasterDataDashboard = () => {
            <div className="flex justify-center mb-4">
              <div className="p-3 rounded-full bg-blue-50"><ServerStackIcon className="w-8 h-8 text-blue-600" /></div>
            </div>
-           <h1 className="text-4xl font-extrabold text-gray-800 mb-1">{displayField(data.total_records || data.total_listings)}</h1>
-           <p className="text-gray-500 uppercase tracking-widest text-xs font-bold">Total Listing Data</p>
+           <h1 className="text-4xl font-extrabold text-gray-800 mb-1">{displayField(data.total_records)}</h1>
+           <p className="text-gray-500 uppercase tracking-widest text-xs font-bold">Total Master Records</p>
         </div>
 
         <div className="bg-white rounded-2xl shadow-sm p-8 text-center relative overflow-hidden border border-gray-100 transition hover:shadow-md">
@@ -139,7 +123,7 @@ const MasterDataDashboard = () => {
         </div>
       </div>
 
-      {/* 2. COMPLETENESS & SCRAPE QUEUE */}
+      {/* 2. COMPLETENESS & MATCHING */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         <MetricCard 
           title="Matched Cities" 
@@ -180,14 +164,14 @@ const MasterDataDashboard = () => {
                 <p className="text-xl font-bold text-gray-800">{source.count?.toLocaleString()}</p>
              </div>
           ))}
-          {(data.source_stats || []).length === 0 && <p className="text-sm text-gray-400">No source data available.</p>}
+          {(data.source_stats || []).length === 0 && <p className="text-sm text-gray-400 col-span-full text-center py-4">No source data available (0).</p>}
         </div>
       </div>
 
-      {/* 4. DETAILED DATA TABLES (3 COLUMNS) */}
+      {/* 4. DATA TABLES */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
         <SimpleTableCard 
-           title="Citywise Data Count" 
+           title="Top Cities" 
            icon={<MapPinIcon className="w-5 h-5 text-green-500"/>}
            data={data.city_counts || []} 
            col1="City"
@@ -195,7 +179,7 @@ const MasterDataDashboard = () => {
         />
 
         <SimpleTableCard 
-           title="Categorywise Data Count" 
+           title="Top Categories" 
            icon={<TagIcon className="w-5 h-5 text-purple-500"/>}
            data={data.category_counts || []}
            col1="Category"
@@ -205,7 +189,7 @@ const MasterDataDashboard = () => {
         {/* City + Category Data */}
         <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100 h-96 flex flex-col">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-bold text-gray-700">City + Category</h3>
+              <h3 className="text-lg font-bold text-gray-700">Top City + Category</h3>
               <ChartBarIcon className="w-5 h-5 text-indigo-500" />
             </div>
             <div className="overflow-y-auto flex-1">
@@ -218,63 +202,36 @@ const MasterDataDashboard = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {(data.top_city_categories || []).map((item, index) => {
-                    const city = item.city;
-                    if (item.category) {
-                       return (
+                  {(data.top_city_categories || []).length > 0 ? (
+                    (data.top_city_categories).map((item, index) => (
                         <tr key={index} className="border-b border-gray-100 last:border-none hover:bg-gray-50 transition">
-                          <td className="py-2 px-2 text-sm text-gray-700">{city}</td>
+                          <td className="py-2 px-2 text-sm text-gray-700">{item.city}</td>
                           <td className="py-2 px-2 text-xs font-bold text-indigo-600 uppercase">{item.category}</td>
                           <td className="py-2 px-2 text-sm font-bold text-right">{item.count}</td>
                         </tr>
-                       );
-                    }
-                    if (item.categories) {
-                        return Object.entries(item.categories).map(([cat, count], i) => (
-                            <tr key={`${index}-${i}`} className="border-b border-gray-100 last:border-none hover:bg-gray-50 transition">
-                              <td className="py-2 px-2 text-sm text-gray-700">{city}</td>
-                              <td className="py-2 px-2 text-xs font-bold text-indigo-600 uppercase">{cat}</td>
-                              <td className="py-2 px-2 text-sm font-bold text-right">{count}</td>
-                            </tr>
-                        ));
-                    }
-                    return null;
-                  })}
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="3" className="py-10 text-center text-sm text-gray-400">No data available</td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
             </div>
         </div>
       </div>
 
-      {/* 5. QUALITY & ISSUES ROW */}
+      {/* 5. QUALITY ISSUES */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-         <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-           <div className="flex items-center justify-between mb-6">
-             <h3 className="text-lg font-bold text-gray-700">City Match Status</h3>
-             <CheckBadgeIcon className="w-6 h-6 text-teal-500" />
-           </div>
-           <div className="flex justify-around items-center">
-             <div className="text-center">
-               <p className="text-3xl font-bold text-teal-600">{displayField(data.city_match_status?.matched)}</p>
-               <p className="text-sm text-gray-500 mt-1">Matched Cities</p>
-             </div>
-             <div className="h-12 w-px bg-gray-200"></div>
-             <div className="text-center">
-               <p className="text-3xl font-bold text-red-500">{displayField(data.city_match_status?.unmatched)}</p>
-               <p className="text-sm text-gray-500 mt-1">Unmatched Cities</p>
-             </div>
-           </div>
-         </div>
-
          <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
            <div className="flex items-center justify-between mb-6">
              <h3 className="text-lg font-bold text-gray-700">Missing Data Points</h3>
              <ExclamationTriangleIcon className="w-6 h-6 text-amber-500" />
            </div>
            <div className="space-y-4">
-             <QualityRow label="Records Missing Phone" count={data.missing_values?.missing_phone} total={data.total_records} error={error} />
-             <QualityRow label="Records Missing Email" count={data.missing_values?.missing_email} total={data.total_records} error={error} />
-             <QualityRow label="Records Missing Address" count={data.missing_values?.missing_address} total={data.total_records} error={error} />
+             <QualityRow label="Records Missing Phone" count={data.missing_values?.missing_phone} total={data.total_records} />
+             <QualityRow label="Records Missing Email" count={data.missing_values?.missing_email} total={data.total_records} />
+             <QualityRow label="Records Missing Address" count={data.missing_values?.missing_address} total={data.total_records} />
            </div>
          </div>
       </div>
@@ -283,7 +240,6 @@ const MasterDataDashboard = () => {
 };
 
 // --- Helper Components ---
-
 const MetricCard = ({ title, value, icon, color }) => (
   <div className="bg-white rounded-xl shadow-sm p-5 flex items-center justify-between border border-gray-100 transition hover:shadow-md">
     <div>
@@ -311,7 +267,8 @@ const SimpleTableCard = ({ title, icon, data, col1, col2 }) => (
           </tr>
         </thead>
         <tbody>
-          {(data || []).map((item, index) => (
+          {(data && data.length > 0) ? (
+            data.map((item, index) => (
             <tr key={index} className="border-b border-gray-100 last:border-none hover:bg-gray-50 transition">
               <td className="py-2 px-2 text-sm text-gray-700 font-medium">
                 {item.city || item.category || 'N/A'}
@@ -320,25 +277,31 @@ const SimpleTableCard = ({ title, icon, data, col1, col2 }) => (
                 {(item.count ?? 0).toLocaleString()}
               </td>
             </tr>
-          ))}
+          ))
+        ) : (
+             <tr>
+                <td colSpan="2" className="py-10 text-center text-sm text-gray-400">No data available</td>
+             </tr>
+        )}
         </tbody>
       </table>
     </div>
   </div>
 );
 
-const QualityRow = ({ label, count, total, error }) => {
-  const percentage = error ? 0 : (Math.round(((count ?? 0) / (total || 1)) * 100) || 0);
+const QualityRow = ({ label, count, total }) => {
+  // Prevent division by zero if total is 0
+  const percentage = total > 0 ? (Math.round(((count ?? 0) / total) * 100) || 0) : 0;
   return (
     <div>
       <div className="flex justify-between text-sm mb-1">
         <span className="text-gray-600">{label}</span>
         <span className="font-semibold text-gray-800">
-          {error ? <span className="text-red-500 text-xs italic">{error}</span> : `${count ?? 0} (${percentage}%)`}
+          {`${count ?? 0} (${percentage}%)`}
         </span>
       </div>
       <div className="w-full bg-gray-100 rounded-full h-1.5">
-        <div className={`h-1.5 rounded-full ${error ? 'bg-gray-300' : 'bg-amber-400'}`} style={{ width: `${percentage}%` }}></div>
+        <div className="h-1.5 rounded-full bg-amber-400" style={{ width: `${percentage}%` }}></div>
       </div>
     </div>
   );
