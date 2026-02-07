@@ -1,13 +1,5 @@
-/*
- * BACKEND TEAM INSTRUCTIONS:
- * ---------------------------------------------------------
- * Endpoint: GET / (Root)
- * Logic: When 'source=atm' is passed, filter the master_table for ATM records only.
- * Pagination: Use OFFSET {(page - 1) * 10} LIMIT 10.
- * ---------------------------------------------------------
- */
-
 import React, { useEffect, useState, useCallback } from "react";
+import api from "@/utils/Api";
 import {
   Button,
   Card,
@@ -25,13 +17,12 @@ import {
 import * as XLSX from "xlsx/dist/xlsx.full.min.js";
 
 const atmColumns = [
-  { key: "name", label: "ATM Name", width: 220 },
-  { key: "address", label: "Address", width: 320 },
-  { key: "phone_number", label: "Contact No", width: 140 },
-  { key: "category", label: "Category", width: 160 },
+  { key: "name", label: "ATM / Bank Name", width: 250 },
+  { key: "bank_name", label: "Bank", width: 150 },
   { key: "city", label: "City", width: 120 },
-  { key: "area", label: "Area", width: 140 },
+  { key: "state", label: "State", width: 140 },
   { key: "pincode", label: "Pincode", width: 100 },
+  { key: "address", label: "Address", width: 350 },
 ];
 
 const AtmDataTable = () => {
@@ -51,25 +42,22 @@ const AtmDataTable = () => {
     setError(null);
     try {
       const queryParams = new URLSearchParams({
-        source: "atm",
         page: currentPage,
         limit: limit,
         search: search,
         city: citySearch,
       });
 
-      const response = await fetch(`http://localhost:5000/?${queryParams}`);
-      
-      if (!response.ok) throw new Error("Backend connection failed");
+      // Note: Ensure /atm/fetch-data route exists in 'backend/routes/listing_routes/upload_atm_route.py'
+      const response = await api.get(`/atm/fetch-data?${queryParams}`);
+      const result = response.data;
 
-      const result = await response.json();
-      
       setPageData(result.data || []);
       setTotalPages(result.total_pages || 1);
       setTotalRecords(result.total_count || 0);
     } catch (err) {
       console.error("Fetch Error:", err);
-      setError("Failed to Fetch data from backend");
+      setError("Failed to Fetch ATM data. (Ensure Backend Route Exists)");
     } finally {
       setLoading(false);
     }
@@ -96,13 +84,13 @@ const AtmDataTable = () => {
       <div className="flex justify-between items-end mb-6">
         <div>
           <Typography variant="h4" className="font-bold text-blue-gray-900">
-            ATM Listing Master
+            ATM Data Master
           </Typography>
           <Typography variant="small" className="font-medium text-gray-500">
             {error ? (
               <span className="text-red-500 font-bold">{error}</span>
             ) : (
-              `Displaying verified records from ATM Source (${totalRecords} total)`
+              `Displaying verified ATM records (${totalRecords} total)`
             )}
           </Typography>
         </div>
@@ -178,7 +166,7 @@ const AtmDataTable = () => {
             <div className="flex flex-col justify-center py-24 items-center gap-4">
               <Spinner className="h-10 w-10 text-blue-500" />
               <Typography className="animate-pulse font-medium text-gray-600">
-                Synchronizing with Master Table...
+                Loading ATM Data...
               </Typography>
             </div>
           ) : (
@@ -219,7 +207,7 @@ const AtmDataTable = () => {
                   <tr>
                     <td colSpan={atmColumns.length} className="p-20 text-center">
                       <Typography variant="h6" color="blue-gray" className="opacity-40 italic">
-                        {error || "No records found for the selected filters"}
+                        {error || "No ATM records found for the selected filters"}
                       </Typography>
                     </td>
                   </tr>

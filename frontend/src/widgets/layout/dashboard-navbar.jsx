@@ -128,9 +128,9 @@ export function DashboardNavbar() {
                 <BellIcon className="h-5 w-5 text-blue-gray-500" />
               </IconButton>
             </MenuHandler>
-            <MenuList className="w-max border-0">
-               {/* Menu Items ... */}
-            </MenuList>
+            <MenuList>
+  <MenuItem>No new notifications</MenuItem>
+</MenuList>
           </Menu>
           <IconButton
             variant="text"

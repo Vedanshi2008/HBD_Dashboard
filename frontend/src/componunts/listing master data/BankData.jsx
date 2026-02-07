@@ -1,13 +1,5 @@
-/*
- * 
- * ---------------------------------------------------------
- * Endpoint: GET / (Root)
- * Logic: When 'source=bank' is passed, filter the master_table for Bank records only.
- * Pagination: Use OFFSET {(page - 1) * 10} LIMIT 10.
- * ---------------------------------------------------------
- */
-
 import React, { useEffect, useState, useCallback } from "react";
+import api from "@/utils/Api";
 import {
   Button,
   Card,
@@ -24,17 +16,16 @@ import {
 } from "@heroicons/react/24/solid";
 import * as XLSX from "xlsx/dist/xlsx.full.min.js";
 
-// Logic: Updated columns to match Bank data schema
 const bankColumns = [
-  { key: "bank_name", label: "Bank Name", width: 220 },
+  { key: "name", label: "Bank Name", width: 200 },
   { key: "branch", label: "Branch", width: 180 },
-  { key: "ifsc_code", label: "IFSC Code", width: 140 },
-  { key: "phone_number", label: "Contact", width: 140 },
-  { key: "address", label: "Address", width: 300 },
+  { key: "ifsc", label: "IFSC Code", width: 120 },
   { key: "city", label: "City", width: 120 },
+  { key: "state", label: "State", width: 140 },
+  { key: "address", label: "Address", width: 300 },
 ];
 
-const BankData = () => {
+const BankDataTable = () => {
   const [loading, setLoading] = useState(true);
   const [pageData, setPageData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -51,31 +42,26 @@ const BankData = () => {
     setError(null);
     try {
       const queryParams = new URLSearchParams({
-        source: "bank", // Logic: Targeting 'bank' source in master_table
         page: currentPage,
         limit: limit,
         search: search,
         city: citySearch,
       });
 
-      const response = await fetch(`http://localhost:5000/?${queryParams}`);
-      
-      if (!response.ok) throw new Error("Backend connection failed");
+      const response = await api.get(`/bank/fetch-data?${queryParams}`);
+      const result = response.data;
 
-      const result = await response.json();
-      
       setPageData(result.data || []);
       setTotalPages(result.total_pages || 1);
       setTotalRecords(result.total_count || 0);
     } catch (err) {
       console.error("Fetch Error:", err);
-      setError("Failed to Fetch data from backend");
+      setError("Failed to Fetch Bank data.");
     } finally {
       setLoading(false);
     }
   }, [currentPage, search, citySearch]);
 
-  // Logic: Fixed hook to call the correct Bank fetch function
   useEffect(() => {
     fetchBankData();
   }, [fetchBankData]);
@@ -89,7 +75,7 @@ const BankData = () => {
     const ws = XLSX.utils.json_to_sheet(pageData);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Bank_Data");
-    XLSX.writeFile(wb, `Bank_Data_Page_${currentPage}.xlsx`);
+    XLSX.writeFile(wb, `Bank_Page_${currentPage}.xlsx`);
   };
 
   return (
@@ -97,13 +83,13 @@ const BankData = () => {
       <div className="flex justify-between items-end mb-6">
         <div>
           <Typography variant="h4" className="font-bold text-blue-gray-900">
-            Bank Data Master
+            Bank Master Data
           </Typography>
           <Typography variant="small" className="font-medium text-gray-500">
             {error ? (
               <span className="text-red-500 font-bold">{error}</span>
             ) : (
-              `Displaying verified records from Bank Source (${totalRecords} total)`
+              `Displaying verified Bank records (${totalRecords} total)`
             )}
           </Typography>
         </div>
@@ -121,7 +107,7 @@ const BankData = () => {
             variant="outlined" 
             size="sm" 
             className="flex items-center gap-2"
-            onClick={fetchBankData} // Logic: Fixed onClick reference
+            onClick={fetchBankData}
           >
             <ArrowPathIcon className="h-4 w-4" /> Refresh
           </Button>
@@ -134,7 +120,7 @@ const BankData = () => {
             <div className="flex w-full shrink-0 gap-2 md:w-max">
               <div className="w-72">
                 <Input 
-                  label="Search Bank Name" 
+                  label="Search Bank Name / IFSC" 
                   value={search} 
                   onChange={(e) => setSearch(e.target.value)} 
                 />
@@ -179,7 +165,7 @@ const BankData = () => {
             <div className="flex flex-col justify-center py-24 items-center gap-4">
               <Spinner className="h-10 w-10 text-blue-500" />
               <Typography className="animate-pulse font-medium text-gray-600">
-                Synchronizing with Master Table...
+                Loading Bank Data...
               </Typography>
             </div>
           ) : (
@@ -220,7 +206,7 @@ const BankData = () => {
                   <tr>
                     <td colSpan={bankColumns.length} className="p-20 text-center">
                       <Typography variant="h6" color="blue-gray" className="opacity-40 italic">
-                        {error || "No records found for the selected filters"}
+                        {error || "No Bank records found for the selected filters"}
                       </Typography>
                     </td>
                   </tr>
@@ -234,4 +220,4 @@ const BankData = () => {
   );
 };
 
-export default BankData;
+export default BankDataTable;

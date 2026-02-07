@@ -1,13 +1,5 @@
-/*
- * BACKEND TEAM INSTRUCTIONS:
- * ---------------------------------------------------------
- * Endpoint: GET / (Root)
- * Logic: When 'source=asklaila' is passed, filter the master_table for Asklaila records only.
- * Pagination: Use OFFSET {(page - 1) * 10} LIMIT 10.
- * ---------------------------------------------------------
- */
-
 import React, { useEffect, useState, useCallback } from "react";
+import api from "@/utils/Api"; // <--- IMPORT ADDED
 import {
   Button,
   Card,
@@ -25,15 +17,17 @@ import {
 import * as XLSX from "xlsx/dist/xlsx.full.min.js";
 
 const asklailaColumns = [
-  { key: "name", label: "Business Name", width: 220 },
-  { key: "address", label: "Address", width: 320 },
-  { key: "phone_number", label: "Contact No", width: 140 },
-  { key: "category", label: "Category", width: 160 },
+  { key: "name", label: "Business Name", width: 250 },
+  { key: "category", label: "Category", width: 180 },
+  { key: "phone_number", label: "Contact No", width: 140 }, // Backend maps 'number1' to this
+  { key: "email", label: "Email", width: 200 },       // <--- NEW
+  { key: "ratings", label: "Rating", width: 100 },    // <--- NEW
   { key: "city", label: "City", width: 120 },
-  { key: "area", label: "Area", width: 140 },
-  { key: "pincode", label: "Pincode", width: 100 },
-];
-
+  { key: "area", label: "Area", width: 150 },
+  { key: "state", label: "State", width: 140 },       // <--- NEW
+  { key: "source", label: "Source", width: 100 },     // <--- NEW
+  { key: "address", label: "Address", width: 500 },
+]
 const AsklailaDataTable = () => {
   const [loading, setLoading] = useState(true);
   const [pageData, setPageData] = useState([]);
@@ -51,20 +45,17 @@ const AsklailaDataTable = () => {
     setError(null);
     try {
       const queryParams = new URLSearchParams({
-        source: "asklaila", // Explicitly requesting Asklaila data
         page: currentPage,
         limit: limit,
         search: search,
         city: citySearch,
       });
 
-      const response = await fetch(`http://localhost:5000/?${queryParams}`);
-      
-      if (!response.ok) throw new Error("Backend connection failed");
+      // --- FIXED FETCH LOGIC ---
+      // using api.get automatically handles the base URL and authorization if needed
+      const response = await api.get(`/asklaila/fetch-data?${queryParams}`);
+      const result = response.data;
 
-      const result = await response.json();
-      
-      // Response logic: mapping total_pages and data from root
       setPageData(result.data || []);
       setTotalPages(result.total_pages || 1);
       setTotalRecords(result.total_count || 0);

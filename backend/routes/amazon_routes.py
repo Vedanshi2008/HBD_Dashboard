@@ -1,40 +1,59 @@
 from flask import Blueprint, request, jsonify
 import threading
-from mysql.connector import Error
-import mysql.connector
-import os
-
-# Import the service functions we created in Step 2
-from services.scrapers.amazon_service import scrape_amazon_search, DB_CONFIG_AMAZON
+from extensions import db
+from model.amazon_product_model import AmazonProduct
+from services.scrapers.amazon_service import scrape_amazon_search
 
 amazon_api_bp = Blueprint('amazon_api_bp', __name__)
 
-@amazon_api_bp.route('/api/amazon_products', methods=['GET'])
-def get_amazon_products():
-    connection = None
-    try:
-        connection = mysql.connector.connect(**DB_CONFIG_AMAZON)
-        cursor = connection.cursor(dictionary=True)
-        cursor.execute("SELECT * FROM amazon_products LIMIT 1000")
-        results = cursor.fetchall()
-        return jsonify(results)
-    except Error as e:
-        return jsonify({'error': str(e)}), 500
-    finally:
-        if connection and connection.is_connected():
-            connection.close()
-
-@amazon_api_bp.route('/api/scrape_amazon', methods=['POST'])
+# --- ROUTE 1: Start Scraping ---
+@amazon_api_bp.route('/scrape_amazon', methods=['POST'])
 def scrape_and_insert():
-    data = request.get_json()
-    search_term = data.get('search_term')
-    pages = int(data.get('pages', 1))
-    
-    if not search_term:
-        return jsonify({'error': 'search_term is required'}), 400
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({'error': 'No JSON data provided'}), 400
+
+        search_term = data.get('search_term')
+        pages = int(data.get('pages', 1))
         
-    # Start the service in a thread
-    thread = threading.Thread(target=scrape_amazon_search, args=(search_term, pages))
-    thread.start()
-    
-    return jsonify({"status": "started"}), 202
+        if not search_term:
+            return jsonify({'error': 'search_term is required'}), 400
+            
+        # Start the service in a background thread
+        # Note: scrape_amazon_search now handles its own app context
+        thread = threading.Thread(target=scrape_amazon_search, args=(search_term, pages))
+        thread.start()
+        
+        return jsonify({"status": "started", "message": f"Scraping '{search_term}' started"}), 202
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+# --- ROUTE 2: Fetch Data (Using SQLAlchemy) ---
+@amazon_api_bp.route('/amazon-data', methods=['GET']) 
+def get_amazon_data():
+    try:
+        # Fetch latest 1000 products using SQLAlchemy
+        products = AmazonProduct.query.order_by(AmazonProduct.id.desc()).limit(1000).all()
+        
+        # Manually serialize the data since we can't edit the Model to add .to_dict()
+        results = []
+        for p in products:
+            results.append({
+                "id": p.id,
+                "ASIN": p.ASIN,
+                "Product_name": p.Product_name,
+                "price": p.price,
+                "rating": p.rating,
+                "Number_of_ratings": p.Number_of_ratings,
+                "Brand": p.Brand,
+                "link": p.link,
+                "Image_URLs": p.Image_URLs,
+                "created_at": p.created_at.isoformat() if p.created_at else None
+            })
+            
+        return jsonify(results)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500

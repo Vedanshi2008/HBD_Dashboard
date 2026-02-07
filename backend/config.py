@@ -15,6 +15,10 @@ class Config:
         f"mysql+pymysql://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}"
         f"@{os.getenv('DB_HOST')}:{os.getenv('DB_PORT','3306')}/{os.getenv('DB_NAME')}"
     )
+    SQLALCHEMY_ENGINE_OPTIONS = {
+        "pool_recycle": 280,
+        "pool_pre_ping": True, # Checks if DB is alive before the query
+    }
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
     # JWT configuration

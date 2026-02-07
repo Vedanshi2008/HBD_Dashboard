@@ -15,6 +15,7 @@ from model.googlemap_data import GooglemapData
 from model.item_csv_model import ItemData
 from model.master_table_model import MasterTable
 from model.upload_master_reports_model import UploadReport
+from model.listing_master import ListingMaster
 
 # --- Import Blueprints ---
 from routes.auth_route import auth_bp
@@ -31,6 +32,7 @@ from routes.items_data import item_bp
 from routes.item_csv_download import item_csv_bp as item_csv_download_bp
 from routes.item_duplicate import item_duplicate_bp
 from routes.upload_others_csv import upload_others_csv_bp
+from routes.listing_master_route import listing_master_bp
 
 # Listing & Product Blueprints
 from routes.listing_routes.upload_asklaila_route import asklaila_bp
@@ -58,6 +60,7 @@ from routes.product_routes.upload_flipkart_products_route import flipkart_bp
 from routes.product_routes.upload_india_mart_route import indiamart_bp
 from routes.product_routes.upload_jio_mart_route import jiomart_bp
 
+
 # --- Initialize App ---
 load_dotenv()
 app = Flask(__name__)
@@ -78,7 +81,7 @@ blueprints_listing = [
 db.init_app(app)
 jwt.init_app(app)
 
-# 1. FIX CORS: Explicitly allow frontend origin (Avoid '*' with credentials)
+# 1. FIX CORS: Explicitly allow frontend origin
 cors.init_app(app, resources={r"/*": {"origins": "http://localhost:5173"}}, supports_credentials=True)
 
 mail.init_app(app)
@@ -96,27 +99,23 @@ PUBLIC_ROUTES = [
     "/auth/verify-otp", 
     "/auth/reset-password", 
     "/health",
-    "/api/master-dashboard-stats"  # <--- CRITICAL: Add this line back
+    "/api/master-dashboard-stats"
 ]
 
 @app.before_request
 def protect_all_routes():
-    # 1. Allow all OPTIONS requests (CORS Preflight) explicitly
-    # Must return a 200 OK response here so the browser knows it's safe to proceed.
     if request.method == "OPTIONS":
         return jsonify({"message": "CORS preflight successful"}), 200
         
-    # 2. Skip protection for public routes
     if request.path in PUBLIC_ROUTES:
         return None
     
-    # 3. Verify Token for everything else
     try:
         verify_jwt_in_request()
     except Exception as e:
         return jsonify({"message": "Missing or invalid token", "error": str(e)}), 401
 
-# --- Register Blueprints ---
+# --- Register Main Blueprints ---
 app.register_blueprint(auth_bp, url_prefix="/auth")
 app.register_blueprint(scraper_bp, url_prefix="/api")
 app.register_blueprint(amazon_api_bp, url_prefix="/api")
@@ -129,8 +128,21 @@ app.register_blueprint(item_bp, url_prefix="/items")
 app.register_blueprint(item_csv_download_bp)
 app.register_blueprint(item_duplicate_bp)
 app.register_blueprint(upload_others_csv_bp)
+app.register_blueprint(listing_master_bp, url_prefix="/api")
 
-# Already defined above
+# --- Register Listing & Product Blueprints (Batch) ---
+# NOTE: atm_bp, bank_bp, and college_dunia_bp are already here!
+blueprints_listing = [
+    (asklaila_bp, "/asklaila"), (atm_bp, "/atm"), (bank_bp, "/bank"),
+    (college_dunia_bp, "/college-dunia"), (freelisting_bp, "/freelisting"),
+    (gmap_upload_bp, "/google-map"), (google_map_scrape_bp, "/google-map-scrape"),
+    (heyplaces_bp, "/heyplaces"), (justdial_bp, "/justdial"), (magicpin_bp, "/magicpin"),
+    (nearbuy_bp, "/nearbuy"), (pinda_bp, "/pinda"), (post_office_bp, "/post-office"),
+    (schoolgis_bp, "/schoolgis"), (shiksha_bp, "/shiksha"), (yellow_pages_bp, "/yellow-pages"),
+    (amazon_upload_bp, "/amazon"), (vivo_bp, "/vivo"), (blinkit_bp, "/blinkit"),
+    (dmart_bp, "/dmart"), (flipkart_bp, "/flipkart"), (indiamart_bp, "/india-mart"),
+    (jiomart_bp, "/jio-mart"), (bigbasket_bp, "/big-basket")
+]
 
 for bp, prefix in blueprints_listing:
     app.register_blueprint(bp, url_prefix=prefix)
@@ -140,5 +152,4 @@ def index():
     return jsonify({"message": "Flask API is running! Clean and Modular."})
 
 if __name__ == '__main__':
-    # Make sure to run on port 8000
     app.run(host='0.0.0.0', port=8000, debug=True)

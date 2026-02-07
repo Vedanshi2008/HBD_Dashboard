@@ -3,17 +3,18 @@ import time
 import random
 import json
 import requests
-import csv
-import threading
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 from fake_useragent import UserAgent
-import mysql.connector
-from mysql.connector import Error
 
-# We define DB Config here again or import from config
+# --- App & DB Imports ---
+from extensions import db
+from model.scraper_task import ScraperTask
+from model.amazon_product_model import AmazonProduct
+
+# --- TEMPORARY: Keep this for amazon_routes.py compatibility if needed ---
 DB_CONFIG_AMAZON = {
-    'host': os.getenv('DB_HOST'),
+    'host': 'host.docker.internal',
     'user': os.getenv('DB_USER'),
     'password': os.getenv('DB_PASSWORD'),
     'database': os.getenv('DB_NAME'),
@@ -32,225 +33,160 @@ def get_headers():
         'Referer': 'https://www.amazon.in/',
         'DNT': '1',
         'Connection': 'keep-alive',
-        'Upgrade-Insecure-Requests': '1',
-        'Sec-Fetch-Dest': 'document',
-        'Sec-Fetch-Mode': 'navigate',
-        'Sec-Fetch-Site': 'same-origin',
-        'Sec-Fetch-User': '?1'
+        'Upgrade-Insecure-Requests': '1'
     }
 
 def get_product_details(url):
-    print("Inside get_product_details:", url)
     try:
         time.sleep(random.uniform(1, 3))
         response = requests.get(url, headers=get_headers())
-        response.raise_for_status()
+        
+        # Log if request failed
+        if response.status_code != 200:
+            print(f"xx Failed to fetch URL: {url} (Status: {response.status_code})")
+            return None
+        
         if 'captcha' in response.text.lower():
-            raise Exception("Captcha page encountered")
+            print("xx Captcha encountered. Skipping.")
+            return None
         
         soup = BeautifulSoup(response.text, 'html.parser')
         
-        # ASIN Logic
+        # 1. ASIN (Required)
         asin = None
-        if '/dp/' in url:
-             asin = url.split('/dp/')[1].split('/')[0].split('?')[0]
-        elif '/gp/product/' in url:
-             asin = url.split('/gp/product/')[1].split('/')[0].split('?')[0]
+        if '/dp/' in url: 
+            parts = url.split('/dp/')
+            if len(parts) > 1: asin = parts[1].split('/')[0].split('?')[0]
+        elif '/gp/product/' in url: 
+            parts = url.split('/gp/product/')
+            if len(parts) > 1: asin = parts[1].split('/')[0].split('?')[0]
+            
+        if not asin: 
+            print("xx No ASIN found in URL.")
+            return None 
 
-        # Title Logic
-        title_selectors = ["#productTitle", "span.a-size-large", "span#title"]
-        name = None
-        for selector in title_selectors:
-            elem = soup.select_one(selector)
-            if elem:
-                name = elem.get_text().strip()
-                break
+        # 2. Extract Fields (With Safe Defaults for Strict DB)
+        name_elem = soup.select_one("#productTitle")
+        name = name_elem.get_text().strip() if name_elem else "Unknown Product"
 
-        # Price Logic
         price_elem = soup.select_one('.a-price-whole')
-        price = '₹' + price_elem.get_text().strip().replace(',', '') if price_elem else None
+        price = '₹' + price_elem.get_text().strip().replace(',', '') if price_elem else "₹0"
         
-        # Rating Logic
-        rating_elem = soup.select_one('span[data-asin][class*="a-icon-alt"]')
-        if not rating_elem: rating_elem = soup.select_one('.a-icon-alt')
-        rating = rating_elem.get_text().split()[0] if rating_elem else None
-        
-        # Num Ratings Logic
-        num_ratings_elem = soup.select_one('#acrCustomerReviewText')
-        if num_ratings_elem:
-            raw_text = num_ratings_elem.get_text()
-            clean_num = ''.join(filter(str.isdigit, raw_text))
-            num_ratings = int(clean_num) if clean_num else 0
-        else:
-            num_ratings = 0
-
+        rating_elem = soup.select_one('.a-icon-alt')
+        rating_str = rating_elem.get_text().split()[0] if rating_elem else "0"
+        try:
+            rating = float(rating_str)
+        except:
+            rating = 0.0
+            
         brand_elem = soup.select_one('#bylineInfo')
-        brand = brand_elem.get_text().strip() if brand_elem else None
+        brand = brand_elem.get_text().strip() if brand_elem else "Unknown Brand"
 
+        # --- RETURN ALL FIELDS (No None Allowed) ---
         return {
             'ASIN': asin,
             'Product_name': name,
             'price': price,
-            'rating': float(rating) if rating else None,
-            'Number_of_ratings': num_ratings,
+            'rating': rating,
+            'Number_of_ratings': 0, 
             'Brand': brand,
-            'Seller': None, 'category': None, 'subcategory': None,
-            'sub_sub_category': None, 'category_sub_sub_sub': None,
-            'colour': None, 'size_options': None, 'description': None,
-            'link': url, 'Image_URLs': None, 'About_the_items_bullet': None,
-            'Product_details': json.dumps({}), 
-            'Additional_Details': json.dumps({}),
-            'Manufacturer_Name': None
+            'Seller': "Unknown",
+            'category': "Uncategorized",
+            'subcategory': "",
+            'sub_sub_category': "",
+            'category_sub_sub_sub': "",
+            'colour': "",
+            'size_options': "",
+            'description': "",
+            'link': url,
+            'Image_URLs': "",
+            'About_the_items_bullet': "",
+            'Product_details': {},    # Empty JSON dict for Strict DB
+            'Additional_Details': {}, 
+            'Manufacturer_Name': "Unknown"
         }
     except Exception as e:
-        print(f"Error scraping product details: {e}")
+        print(f"xx Error scraping {url}: {e}")
         return None
 
-def insert_products_to_db(products):
-    if not products:
-        return 0
-    connection = None
-    inserted = 0
-    try:
-        connection = mysql.connector.connect(**DB_CONFIG_AMAZON)
-        cursor = connection.cursor()
-        create_table_query = '''
-        CREATE TABLE IF NOT EXISTS amazon_products (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            ASIN VARCHAR(20) UNIQUE,
-            Product_name TEXT,
-            price VARCHAR(50),
-            rating FLOAT,
-            Number_of_ratings INT,
-            Brand VARCHAR(255),
-            Seller VARCHAR(255),
-            category VARCHAR(255),
-            subcategory VARCHAR(255),
-            sub_sub_category VARCHAR(255),
-            category_sub_sub_sub VARCHAR(255),
-            colour VARCHAR(255),
-            size_options TEXT,
-            description TEXT,
-            link TEXT,
-            Image_URLs TEXT,
-            About_the_items_bullet TEXT,
-            Product_details JSON,
-            Additional_Details JSON,
-            Manufacturer_Name VARCHAR(500),
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )'''
-        cursor.execute(create_table_query)
-        insert_query = '''
-        INSERT INTO amazon_products (
-            ASIN, Product_name, price, rating, Number_of_ratings, Brand, Seller, category, subcategory, sub_sub_category, category_sub_sub_sub, colour, size_options, description, link, Image_URLs, About_the_items_bullet, Product_details, Additional_Details, Manufacturer_Name
-        ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-        ON DUPLICATE KEY UPDATE
-            Product_name=VALUES(Product_name),
-            price=VALUES(price),
-            rating=VALUES(rating),
-            Number_of_ratings=VALUES(Number_of_ratings),
-            Brand=VALUES(Brand),
-            Seller=VALUES(Seller),
-            category=VALUES(category),
-            subcategory=VALUES(subcategory),
-            sub_sub_category=VALUES(sub_sub_category),
-            category_sub_sub_sub=VALUES(category_sub_sub_sub),
-            colour=VALUES(colour),
-            size_options=VALUES(size_options),
-            description=VALUES(description),
-            link=VALUES(link),
-            Image_URLs=VALUES(Image_URLs),
-            About_the_items_bullet=VALUES(About_the_items_bullet),
-            Product_details=VALUES(Product_details),
-            Additional_Details=VALUES(Additional_Details),
-            Manufacturer_Name=VALUES(Manufacturer_Name)
-        '''
-        for product in products:
-            cursor.execute(insert_query, (
-                product['ASIN'],
-                product['Product_name'],
-                product['price'],
-                product['rating'],
-                product['Number_of_ratings'],
-                product['Brand'],
-                product['Seller'],
-                product['category'],
-                product['subcategory'],
-                product['sub_sub_category'],
-                product['category_sub_sub_sub'],
-                product['colour'],
-                product['size_options'],
-                product['description'],
-                product['link'],
-                product['Image_URLs'],
-                product['About_the_items_bullet'],
-                product['Product_details'],
-                product['Additional_Details'],
-                product['Manufacturer_Name']
-            ))
-            inserted += 1
-        connection.commit()
-    except Error as e:
-        print(f"Error inserting products: {e}")
-    finally:
-        if connection and connection.is_connected():
-            connection.close()
-    return inserted
-
 def scrape_amazon_search(search_term, pages=1, limit=1000):
-    products = []
-    previous_count = 0 
-
-    for page in range(1, pages + 1):
+    from app import app 
+    
+    with app.app_context():
         try:
-            print(f"\n----- Scraping Page {page} -----")
-            search_url = f"{BASE_URL}/s?k={requests.utils.quote(search_term)}&page={page}"
-            time.sleep(random.uniform(1, 2))
-
-            response = requests.get(search_url, headers=get_headers())
-            response.raise_for_status()
-
-            soup = BeautifulSoup(response.text, 'html.parser')
-
-            product_links = [
-                urljoin(BASE_URL, a['href'])
-                for a in soup.select('a.a-link-normal.s-no-outline')
-                if a.get('href')
-            ]
-
-            print("Found links on this page:", len(product_links))
-
-            if len(product_links) == previous_count:
-                print("No new product links appearing… stopping scraping.")
-                break
-
-            previous_count = len(product_links)
-
-            for link in product_links:
-                if len(products) >= limit:
+            # Initialize Task
+            task = ScraperTask(
+                platform="Amazon",
+                search_query=search_term, 
+                status="RUNNING",
+                progress=0,
+                total_found=0
+            )
+            db.session.add(task)
+            db.session.commit()
+            
+            print(f"\n>>> TASK STARTED: ID {task.id} | Query: '{search_term}' | Pages: {pages}")
+            
+            all_products_count = 0
+            
+            for page in range(1, pages + 1):
+                # Check for STOP
+                db.session.refresh(task)
+                if task.status in ["STOPPED", "CANCELLED"]:
+                    print(f"!!! Task {task.id} Stopped by User !!!")
                     break
 
-                print("Fetching product:", link)
-                product_data = get_product_details(link)
+                search_url = f"{BASE_URL}/s?k={requests.utils.quote(search_term)}&page={page}"
+                print(f"\n--- Scraping Page {page}/{pages} ---")
+                
+                try:
+                    response = requests.get(search_url, headers=get_headers())
+                    if response.status_code == 200:
+                        soup = BeautifulSoup(response.text, 'html.parser')
+                        links = [urljoin(BASE_URL, a['href']) for a in soup.select('a.a-link-normal.s-no-outline') if a.get('href')]
+                        
+                        print(f"Found {len(links)} product links on Page {page}.")
+                        
+                        page_saved_count = 0
+                        for link in links:
+                            if all_products_count >= limit: break
+                            
+                            p_data = get_product_details(link)
+                            if p_data:
+                                # Save with SQLAlchemy
+                                existing = AmazonProduct.query.filter_by(ASIN=p_data['ASIN']).first()
+                                if not existing:
+                                    new_prod = AmazonProduct(**p_data)
+                                    db.session.add(new_prod)
+                                    all_products_count += 1
+                                    page_saved_count += 1
+                                    print(f" [V] Saved: {p_data['Product_name'][:40]}...")
+                                else:
+                                    print(f" [!] Duplicate ASIN skipped: {p_data['ASIN']}")
+                            
+                        # Commit batch per page
+                        task.progress = int((page / pages) * 100)
+                        task.total_found = all_products_count
+                        db.session.commit()
+                        print(f"--- Page {page} Commit Success. Total Saved: {all_products_count} ---")
+                    
+                    else:
+                        print(f"xx Failed to load Search Page {page}. Status: {response.status_code}")
 
-                if product_data:
-                    products.append(product_data)
+                except Exception as e:
+                    print(f"xx Critical Error on Page {page}: {e}")
 
-                time.sleep(random.uniform(1.5, 4))
+                if all_products_count >= limit: 
+                    print("--- Limit Reached ---")
+                    break
 
-            if len(products) >= limit:
-                break
+            task.status = "COMPLETED"
+            db.session.commit()
+            print(f"\n>>> TASK COMPLETED: ID {task.id} | Total Products: {all_products_count} <<<\n")
 
         except Exception as e:
-            print(f"Error on page {page}: {str(e)}")
-            time.sleep(random.uniform(5, 10))
-            continue
-
-    print("Saving data to MySQL…")
-    inserted = insert_products_to_db(products)
-    if inserted:
-        print(f"Inserted {inserted} rows into DB.")
-    else:
-        print("No data inserted into DB.")
-
-    return products
+            db.session.rollback()
+            print(f"\nxxx TASK FAILED: {e} xxx\n")
+            task.status = "FAILED"
+            task.error_message = str(e)
+            db.session.commit()

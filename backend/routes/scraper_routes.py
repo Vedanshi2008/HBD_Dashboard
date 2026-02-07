@@ -8,7 +8,9 @@ from services.scrapers.google_maps_service import run_google_maps_scraper
 
 scraper_bp = Blueprint('scraper_bp', __name__)
 
-@scraper_bp.route('/api/tasks', methods=['GET'])
+# --- CORRECTED ROUTES (Removed '/api' prefix) ---
+
+@scraper_bp.route('/tasks', methods=['GET'])  # url_prefix makes this /api/tasks
 def get_tasks():
     try:
         tasks = ScraperTask.query.order_by(ScraperTask.id.desc()).all()
@@ -23,7 +25,7 @@ def get_tasks():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-@scraper_bp.route('/api/stop', methods=['POST'])
+@scraper_bp.route('/stop', methods=['POST'])  # url_prefix makes this /api/stop
 def stop_task():
     data = request.json
     task_id = data.get('task_id')
@@ -34,7 +36,7 @@ def stop_task():
         return jsonify({"message": "Stop signal sent"}), 200
     return jsonify({"error": "Task not found"}), 404
 
-@scraper_bp.route('/api/tasks/<int:task_id>', methods=['DELETE'])
+@scraper_bp.route('/tasks/<int:task_id>', methods=['DELETE']) # url_prefix makes this /api/tasks/<id>
 def delete_task(task_id):
     task = ScraperTask.query.get(task_id)
     if task:
@@ -43,7 +45,7 @@ def delete_task(task_id):
         return jsonify({"message": "Task deleted successfully"}), 200
     return jsonify({"error": "Task not found"}), 404
 
-@scraper_bp.route('/api/scrape', methods=['POST'])
+@scraper_bp.route('/scrape', methods=['POST']) # url_prefix makes this /api/scrape
 def start_deep_scrape():
     data = request.json
     category = data.get('category')
@@ -61,17 +63,12 @@ def start_deep_scrape():
     db.session.commit()
 
     # 2. Start Scraper in Thread
-    # Note: We pass `current_app._get_current_object()` so the thread can access the Flask context
     app = current_app._get_current_object()
     thread = threading.Thread(target=run_google_maps_scraper, args=(new_task.id, app))
     thread.start()
 
     return jsonify({"message": "Deep Scraper Started", "task_id": new_task.id}), 202
 
-@scraper_bp.route('/api/results', methods=['GET'])
+@scraper_bp.route('/results', methods=['GET']) # url_prefix makes this /api/results
 def api_results():
-    # You can keep the raw SQL connection here if needed, 
-    # OR import a service function to get results. 
-    # For now, let's keep it simple and import the connection logic or move it to a service later.
-    # (To save time, you can copy the 'api_results' function logic from your old app.py here)
     pass
